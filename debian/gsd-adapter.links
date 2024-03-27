@@ -1,0 +1,1 @@
+/usr/lib/systemd/user/gsd-adapter.service /usr/lib/systemd/user/gnome-session.target.wants/gsd-adapter.service

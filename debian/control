@@ -1,0 +1,47 @@
+Source: pqadapter
+Maintainer: Bardia Moshiri <fakeshell@bardia.tech>
+Section: libs
+Priority: optional
+Build-Depends: debhelper-compat (= 13),
+               gcc,
+               make,
+               libglib2.0-dev,
+               libglibutil-dev,
+               libgbinder-dev,
+               libasound2-dev,
+               libandroid-properties-dev,
+Standards-Version: 4.5.0.3
+Vcs-Browser: https://github.com/furilabs/pqadapter
+Vcs-Git: https://github.com/furilabs/pqadapter.git
+
+Package: pqcli
+Architecture: any
+Depends: ${misc:Depends},
+         libgbinder,
+         libglib2.0-0,
+         libglibutil
+Description: pqcli
+ A binary to tweak mediatek PQ functions
+
+Package: gsd-adapter
+Architecture: any
+Depends: ${misc:Depends},
+         libgbinder,
+         libglib2.0-0,
+         libglibutil
+Description: gsd-adapter
+ A service to handle device specific gsd functions
+
+Package: libpq
+Architecture: any
+Depends: ${misc:Depends},
+         libgbinder,
+Description: libpq
+ PQ wrapper shared object
+
+Package: libpq-dev
+Architecture: any
+Depends: ${misc:Depends},
+         libgbinder,
+Description: libpq-dev
+ PQ wrapper development headers

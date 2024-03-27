@@ -1,0 +1,16 @@
+[Unit]
+Description=GNOME Settings Daemon device specific adapter
+
+After=gnome-session-manager.target
+
+Requisite=gnome-session-initialized.target
+PartOf=gnome-session-initialized.target
+Before=gnome-session-initialized.target
+
+[Service]
+Slice=session.slice
+
+ExecStart=/usr/libexec/gsd-adapter
+Type=simple
+Restart=on-failure
+TimeoutStopSec=5

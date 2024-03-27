@@ -1,0 +1,2 @@
+usr/libexec/gsd-adapter
+usr/lib/systemd/user/gsd-adapter.service

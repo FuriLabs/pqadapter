@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	install -D -m 0755 pqcli debian/tmp/usr/bin/pqcli
+	install -D -m 0755 gsd-adapter debian/tmp/usr/libexec/gsd-adapter
+	install -D -m 0644 gsd-adapter.service debian/tmp/usr/lib/systemd/user/gsd-adapter.service
+	install -D -m 0644 libpq.so debian/libpq/usr/lib/$(DEB_HOST_MULTIARCH)/libpq.so
+	install -D -m 0644 pq.h debian/tmp/usr/include/pq.h
