@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="io.furios.pq" path="/io/furios/pq/">
+    <key name="pq-mode" type="i">
+      <default>0</default>
+      <summary>PQ Mode</summary>
+      <description>The PQ mode setting.</description>
+    </key>
+    <key name="blue-light" type="i">
+      <default>0</default>
+      <summary>Blue Light</summary>
+      <description>Enable or disable blue light.</description>
+    </key>
+    <key name="blue-light-strength" type="i">
+      <default>0</default>
+      <summary>Blue Light Strength</summary>
+      <description>The blue light strength setting.</description>
+    </key>
+    <key name="chameleon" type="i">
+      <default>0</default>
+      <summary>Chameleon</summary>
+      <description>Enable or disable chameleon feature.</description>
+    </key>
+    <key name="chameleon-strength" type="i">
+      <default>0</default>
+      <summary>Chameleon Strength</summary>
+      <description>The chameleon strength setting.</description>
+    </key>
+    <key name="gamma-index" type="i">
+      <default>0</default>
+      <summary>Gamma Index</summary>
+      <description>The gamma index setting.</description>
+    </key>
+    <key name="display-color" type="i">
+      <default>0</default>
+      <summary>Display Color</summary>
+      <description>The feature display color setting.</description>
+    </key>
+    <key name="content-color" type="i">
+      <default>0</default>
+      <summary>Content Color</summary>
+      <description>The feature content color setting.</description>
+    </key>
+    <key name="content-color-video" type="i">
+      <default>0</default>
+      <summary>Content Color Video</summary>
+      <description>The feature content color video setting.</description>
+    </key>
+    <key name="sharpness" type="i">
+      <default>0</default>
+      <summary>Sharpness</summary>
+      <description>The feature sharpness setting.</description>
+    </key>
+    <key name="dynamic-contrast" type="i">
+      <default>0</default>
+      <summary>Dynamic Contrast</summary>
+      <description>The feature dynamic contrast setting.</description>
+    </key>
+    <key name="dynamic-sharpness" type="i">
+      <default>0</default>
+      <summary>Dynamic Sharpness</summary>
+      <description>The feature dynamic sharpness setting.</description>
+    </key>
+    <key name="display-ccorr" type="i">
+      <default>0</default>
+      <summary>Display CCORR</summary>
+      <description>The feature display CCORR setting.</description>
+    </key>
+    <key name="display-gamma" type="i">
+      <default>0</default>
+      <summary>Display Gamma</summary>
+      <description>The feature display gamma setting.</description>
+    </key>
+    <key name="display-over-drive" type="i">
+      <default>0</default>
+      <summary>Display Over Drive</summary>
+      <description>The feature display over drive setting.</description>
+    </key>
+    <key name="iso-adaptive-sharpness" type="i">
+      <default>0</default>
+      <summary>ISO Adaptive Sharpness</summary>
+      <description>The feature ISO adaptive sharpness setting.</description>
+    </key>
+    <key name="ultra-resolution" type="i">
+      <default>0</default>
+      <summary>Ultra Resolution</summary>
+      <description>The feature ultra resolution setting.</description>
+    </key>
+    <key name="video-hdr" type="i">
+      <default>0</default>
+      <summary>Video HDR</summary>
+      <description>The feature video HDR setting.</description>
+    </key>
+  </schema>
+</schemalist>
