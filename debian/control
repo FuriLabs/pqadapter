@@ -17,6 +17,7 @@ Vcs-Git: https://github.com/furilabs/pqadapter.git
 Package: pqcli
 Architecture: any
 Depends: ${misc:Depends},
+         pq-gsettings,
          libgbinder,
          libglib2.0-0,
          libglibutil
@@ -26,6 +27,7 @@ Description: pqcli
 Package: gsd-adapter
 Architecture: any
 Depends: ${misc:Depends},
+         pq-gsettings,
          libgbinder,
          libglib2.0-0,
          libglibutil
@@ -35,6 +37,7 @@ Description: gsd-adapter
 Package: libpq
 Architecture: any
 Depends: ${misc:Depends},
+         pq-gsettings,
          libgbinder,
          libglib2.0-0,
          libglibutil
@@ -44,6 +47,7 @@ Description: libpq
 Package: libpq-dev
 Architecture: any
 Depends: ${misc:Depends},
+         pq-gsettings,
          libgbinder,
          libglib2.0-0,
          libglibutil
@@ -53,8 +57,15 @@ Description: libpq-dev
 Package: pqdbus
 Architecture: any
 Depends: ${misc:Depends},
+         pq-gsettings,
          libgbinder,
          libglib2.0-0,
          libglibutil
 Description: libpq
  PQ wrapper session dbus service
+
+Package: pq-gsettings
+Architecture: any
+Depends: ${misc:Depends},
+Description: pq-gsettings
+ PQ wrapper gsettings gschema
