@@ -117,7 +117,68 @@ static void on_location_setting_changed(GSettings *settings, gchar *key, gpointe
     }
 }
 
+void pq_startup() {
+    GSettings *settings = g_settings_new("io.furios.pq");
+
+    if (!settings) {
+        fprintf(stderr, "Failed to initialize GSettings\n");
+        return;
+    }
+
+    int functions[PQ_FUNCTION_MAX] = {
+        SET_PQ_MODE,
+        ENABLE_BLUE_LIGHT,
+        SET_BLUE_LIGHT_STRENGTH,
+        ENABLE_CHAMELEON,
+        SET_CHAMELEON_STRENGTH,
+        SET_GAMMA_INDEX,
+        SET_FEATURE_DISPLAY_COLOR,
+        SET_FEATURE_CONTENT_COLOR,
+        SET_FEATURE_CONTENT_COLOR_VIDEO,
+        SET_FEATURE_SHARPNESS,
+        SET_FEATURE_DYNAMIC_CONTRAST,
+        SET_FEATURE_DYNAMIC_SHARPNESS,
+        SET_FEATURE_DISPLAY_CCORR,
+        SET_FEATURE_DISPLAY_GAMMA,
+        SET_FEATURE_DISPLAY_OVER_DRIVE,
+        SET_FEATURE_ISO_ADAPTIVE_SHARPNESS,
+        SET_FEATURE_ULTRA_RESOLUTION,
+        SET_FEATURE_VIDEO_HDR
+    };
+
+    const char *keys[PQ_FUNCTION_MAX] = {
+        "pq-mode",
+        "blue-light",
+        "blue-light-strength",
+        "chameleon",
+        "chameleon-strength",
+        "gamma-index",
+        "display-color",
+        "content-color",
+        "content-color-video",
+        "sharpness",
+        "dynamic-contrast",
+        "dynamic-sharpness",
+        "display-ccorr",
+        "display-gamma",
+        "display-over-drive",
+        "iso-adaptive-sharpness",
+        "ultra-resolution",
+        "video-hdr"
+    };
+
+    for (int i = 0; i < PQ_FUNCTION_MAX - 1; i++) {
+        int mode = g_settings_get_int(settings, keys[i]);
+        //printf("Setting %s to %d\n", keys[i], mode);
+        init_pq_hidl(functions[i], mode);
+    }
+
+    g_object_unref(settings);
+}
+
 int main(int argc, char **argv) {
+    pq_startup();
+
     GSettings *settings_color = g_settings_new("org.gnome.settings-daemon.plugins.color");
     GSettings *settings_privacy = g_settings_new("org.gnome.desktop.privacy");
     GSettings *settings_location = g_settings_new("org.gnome.system.location");
