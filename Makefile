@@ -13,7 +13,9 @@ PQCLI_BIN=pqcli
 LIBPQ=libpq.so
 PQDBUS_BIN=pqdbus
 
-.PHONY: all clean
+PREFIX?=/usr
+
+.PHONY: all clean install compile-schemas
 
 all: $(GSD_ADAPTER_BIN) $(PQCLI_BIN) $(LIBPQ) $(PQDBUS_BIN)
 
@@ -28,6 +30,19 @@ $(LIBPQ): $(LIBPQ_SRCS)
 
 $(PQDBUS_BIN): $(PQDBUS_SRCS)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+
+install: all
+	install -D -m 0755 $(PQCLI_BIN) debian/tmp$(PREFIX)/bin/$(PQCLI_BIN)
+	install -D -m 0755 $(GSD_ADAPTER_BIN) debian/tmp$(PREFIX)/libexec/$(GSD_ADAPTER_BIN)
+	install -D -m 0644 gsd-adapter.service debian/tmp$(PREFIX)/lib/systemd/user/gsd-adapter.service
+	install -D -m 0644 $(LIBPQ) debian/libpq$(PREFIX)/lib/$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)/$(LIBPQ)
+	install -D -m 0644 pq.h debian/tmp$(PREFIX)/include/pq.h
+	install -D -m 0755 $(PQDBUS_BIN) debian/tmp$(PREFIX)/libexec/$(PQDBUS_BIN)
+	install -D -m 0644 pqdbus.service debian/tmp$(PREFIX)/lib/systemd/user/pqdbus.service
+	install -D -m 0644 io.furios.pq.gschema.xml debian/tmp$(PREFIX)/share/glib-2.0/schemas/io.furios.pq.gschema.xml
+
+compile-schemas:
+	glib-compile-schemas debian/tmp$(PREFIX)/share/glib-2.0/schemas/
 
 clean:
 	rm -f $(GSD_ADAPTER_BIN) $(PQCLI_BIN) $(LIBPQ) $(PQDBUS_BIN)
