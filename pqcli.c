@@ -10,7 +10,7 @@
 #include <stdbool.h>
 
 bool is_func_valid(int func) {
-    return func >= 1 && func <= 18;
+    return func >= 1 && func <= 20;
 }
 
 int main(int argc, char *argv[]) {
@@ -22,18 +22,20 @@ int main(int argc, char *argv[]) {
                "id 4: enableChameleon, inputs: <0: disable, 1: enable>\n"
                "id 5: setChameleonStrength, inputs: <0-1000>\n"
                "id 6: setGammaIndex, inputs: <0-1000>\n"
-               "id 7: setFeatureDisplayColor, inputs: <mode>\n"
-               "id 8: setFeatureContentColor, inputs: <mode>\n"
-               "id 9: setFeatureContentColorVideo, inputs: <mode>\n"
-               "id 10: setFeatureSharpness, inputs: <mode>\n"
-               "id 11: setFeatureDynamicContrast, inputs: <mode>\n"
-               "id 12: setFeatureDynamicSharpness, inputs: <mode>\n"
-               "id 13: setFeatureDisplayCcorr, inputs: <mode>\n"
-               "id 14: setFeatureDisplayGamma, inputs: <mode>\n"
-               "id 15: setFeatureDisplayOverDrive, inputs: <mode>\n"
-               "id 16: setFeatureIsoAdaptiveSharpness, inputs: <mode>\n"
-               "id 17: setFeatureUltraResolution, inputs: <mode>\n"
-               "id 18: setFeatureVideoHdr, inputs: <mode>\n", argv[0]);
+               "id 7: setFeatureDisplayColor, inputs: <0: disable, 1: enable>\n"
+               "id 8: setFeatureContentColor, inputs: <0: disable, 1: enable>\n"
+               "id 9: setFeatureContentColorVideo, inputs: <0: disable, 1: enable>\n"
+               "id 10: setFeatureSharpness, inputs: <0: disable, 1: enable>\n"
+               "id 11: setFeatureDynamicContrast, inputs: <0: disable, 1: enable>\n"
+               "id 12: setFeatureDynamicSharpness, inputs: <0: disable, 1: enable>\n"
+               "id 13: setFeatureDisplayCcorr, inputs: <0: disable, 1: enable>\n"
+               "id 14: setFeatureDisplayGamma, inputs: <0: disable, 1: enable>\n"
+               "id 15: setFeatureDisplayOverDrive, inputs: <0: disable, 1: enable>\n"
+               "id 16: setFeatureIsoAdaptiveSharpness, inputs: <0: disable, 1: enable>\n"
+               "id 17: setFeatureUltraResolution, inputs: <0: disable, 1: enable>\n"
+               "id 18: setFeatureVideoHdr, inputs: <0: disable, 1: enable>\n"
+               "id 19: setGlobalPQSwitch, inputs: <0: disable, 1: enable>\n"
+               "id 20: setGlobalPQStrength, inputs: <0-1000>\n", argv[0]);
         return 1;
     }
 

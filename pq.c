@@ -313,6 +313,36 @@ void set_feature_video_hdr_hidl(GBinderClient* client, const int mode, GSettings
     g_settings_sync();
 }
 
+void set_global_pq_switch_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+    int status;
+    GBinderLocalRequest* req = gbinder_client_new_request(client);
+    GBinderWriter writer;
+
+    // setGlobalPQSwitch
+    gbinder_local_request_init_writer(req, &writer);
+    gbinder_writer_append_int32(&writer, mode);
+    gbinder_client_transact_sync_reply(client, 34, req, &status);
+    gbinder_local_request_unref(req);
+
+    g_settings_set_int(settings, "global-pq-switch", mode);
+    g_settings_sync();
+}
+
+void set_global_pq_strength_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+    int status;
+    GBinderLocalRequest* req = gbinder_client_new_request(client);
+    GBinderWriter writer;
+
+    // setGlobalPQStrength
+    gbinder_local_request_init_writer(req, &writer);
+    gbinder_writer_append_int32(&writer, mode);
+    gbinder_client_transact_sync_reply(client, 36, req, &status);
+    gbinder_local_request_unref(req);
+
+    g_settings_set_int(settings, "global-pq-strength", mode);
+    g_settings_sync();
+}
+
 int init_pq_hidl(const int func, const int mode) {
     GBinderServiceManager* sm = gbinder_servicemanager_new("/dev/hwbinder");
     if (!sm) return 1;
@@ -368,6 +398,10 @@ int init_pq_hidl(const int func, const int mode) {
         set_feature_ultra_resolution_hidl(client, mode, settings);
     } else if (func == 18) {
         set_feature_video_hdr_hidl(client, mode, settings);
+    } else if (func == 19) {
+        set_global_pq_switch_hidl(client, mode, settings);
+    } else if (func == 20) {
+        set_global_pq_strength_hidl(client, mode, settings);
     } else {
         return 1;
     }

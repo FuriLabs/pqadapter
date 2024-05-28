@@ -91,5 +91,15 @@
       <summary>Video HDR</summary>
       <description>The feature video HDR setting.</description>
     </key>
+    <key name="global-pq-switch" type="i">
+      <default>0</default>
+      <summary>Global PQ switch</summary>
+      <description>The global PQ switch setting.</description>
+    </key>
+    <key name="global-pq-strength" type="i">
+      <default>0</default>
+      <summary>Global PQ Strength</summary>
+      <description>The global PQ strength setting.</description>
+    </key>
   </schema>
 </schemalist>
