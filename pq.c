@@ -37,8 +37,10 @@ void set_pq_mode_hidl(GBinderClient* client, const int mode, GSettings *settings
     gbinder_client_transact_sync_reply(client, 3, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "pq-mode", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "pq-mode", mode);
+        g_settings_sync();
+    }
 }
 
 void enable_blue_light_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -53,8 +55,10 @@ void enable_blue_light_hidl(GBinderClient* client, const int mode, GSettings *se
     gbinder_client_transact_sync_reply(client, 14, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "blue-light", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "blue-light", mode);
+        g_settings_sync();
+    }
 }
 
 void set_blue_light_strength_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -69,8 +73,10 @@ void set_blue_light_strength_hidl(GBinderClient* client, const int mode, GSettin
     gbinder_client_transact_sync_reply(client, 16, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "blue-light-strength", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "blue-light-strength", mode);
+        g_settings_sync();
+    }
 }
 
 void enable_chameleon_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -85,8 +91,10 @@ void enable_chameleon_hidl(GBinderClient* client, const int mode, GSettings *set
     gbinder_client_transact_sync_reply(client, 18, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "chameleon", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "chameleon", mode);
+        g_settings_sync();
+    }
 }
 
 void set_chameleon_strength_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -101,8 +109,10 @@ void set_chameleon_strength_hidl(GBinderClient* client, const int mode, GSetting
     gbinder_client_transact_sync_reply(client, 20, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "chameleon-strength", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "chameleon-strength", mode);
+        g_settings_sync();
+    }
 }
 
 void set_gamma_index_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -117,8 +127,10 @@ void set_gamma_index_hidl(GBinderClient* client, const int mode, GSettings *sett
     gbinder_client_transact_sync_reply(client, 27, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "gamma-index", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "gamma-index", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_display_color_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -133,8 +145,10 @@ void set_feature_display_color_hidl(GBinderClient* client, const int mode, GSett
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "display-color", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "display-color", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_content_color_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -149,8 +163,10 @@ void set_feature_content_color_hidl(GBinderClient* client, const int mode, GSett
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "content-color", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "content-color", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_content_color_video_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -165,8 +181,10 @@ void set_feature_content_color_video_hidl(GBinderClient* client, const int mode,
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "content-color-video", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "content-color-video", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_sharpness_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -181,8 +199,10 @@ void set_feature_sharpness_hidl(GBinderClient* client, const int mode, GSettings
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "sharpness", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "sharpness", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_dynamic_contrast_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -197,8 +217,10 @@ void set_feature_dynamic_contrast_hidl(GBinderClient* client, const int mode, GS
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "dynamic-contrast", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "dynamic-contrast", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_dynamic_sharpness_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -213,8 +235,10 @@ void set_feature_dynamic_sharpness_hidl(GBinderClient* client, const int mode, G
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "dynamic-sharpness", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "dynamic-sharpness", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_display_ccorr_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -229,8 +253,10 @@ void set_feature_display_ccorr_hidl(GBinderClient* client, const int mode, GSett
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "display-ccorr", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "display-ccorr", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_display_gamma_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -245,8 +271,10 @@ void set_feature_display_gamma_hidl(GBinderClient* client, const int mode, GSett
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "display-gamma", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "display-gamma", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_display_over_drive_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -261,8 +289,10 @@ void set_feature_display_over_drive_hidl(GBinderClient* client, const int mode, 
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "display-over-drive", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "display-over-drive", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -277,8 +307,10 @@ void set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client, const int mo
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "iso-adaptive-sharpness", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "iso-adaptive-sharpness", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_ultra_resolution_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -293,8 +325,10 @@ void set_feature_ultra_resolution_hidl(GBinderClient* client, const int mode, GS
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "ultra-resolution", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "ultra-resolution", mode);
+        g_settings_sync();
+    }
 }
 
 void set_feature_video_hdr_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -309,8 +343,10 @@ void set_feature_video_hdr_hidl(GBinderClient* client, const int mode, GSettings
     gbinder_client_transact_sync_reply(client, 12, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "video-hdr", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "video-hdr", mode);
+        g_settings_sync();
+    }
 }
 
 void set_global_pq_switch_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -324,8 +360,10 @@ void set_global_pq_switch_hidl(GBinderClient* client, const int mode, GSettings 
     gbinder_client_transact_sync_reply(client, 34, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "global-pq-switch", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "global-pq-switch", mode);
+        g_settings_sync();
+    }
 }
 
 void set_global_pq_strength_hidl(GBinderClient* client, const int mode, GSettings *settings) {
@@ -339,8 +377,10 @@ void set_global_pq_strength_hidl(GBinderClient* client, const int mode, GSetting
     gbinder_client_transact_sync_reply(client, 36, req, &status);
     gbinder_local_request_unref(req);
 
-    g_settings_set_int(settings, "global-pq-strength", mode);
-    g_settings_sync();
+    if (settings) {
+        g_settings_set_int(settings, "global-pq-strength", mode);
+        g_settings_sync();
+    }
 }
 
 int init_pq_hidl(const int func, const int mode) {
@@ -360,7 +400,9 @@ int init_pq_hidl(const int func, const int mode) {
         return 1;
     }
 
-    GSettings *settings = g_settings_new("io.furios.pq");
+    GSettingsSchemaSource *schema_source = g_settings_schema_source_get_default();
+    GSettingsSchema *schema = g_settings_schema_source_lookup(schema_source, "io.furios.pq", TRUE);
+    GSettings *settings = schema ? g_settings_new("io.furios.pq") : NULL;
 
     if (func == 1) {
         set_pq_mode_hidl(client, mode, settings);
@@ -403,6 +445,16 @@ int init_pq_hidl(const int func, const int mode) {
     } else if (func == 20) {
         set_global_pq_strength_hidl(client, mode, settings);
     } else {
+        if (settings) {
+            g_object_unref(settings);
+        }
+
+        gbinder_client_unref(client);
+
+        if (!remote) {
+            gbinder_remote_object_unref(remote);
+        }
+
         return 1;
     }
 
