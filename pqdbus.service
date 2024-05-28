@@ -1,0 +1,7 @@
+[Unit]
+Description=PQ wrapper DBUS service
+
+[Service]
+Type=dbus
+BusName=io.FuriOS.PQ
+ExecStart=/usr/libexec/pqdbus

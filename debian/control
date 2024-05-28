@@ -36,6 +36,8 @@ Package: libpq
 Architecture: any
 Depends: ${misc:Depends},
          libgbinder,
+         libglib2.0-0,
+         libglibutil
 Description: libpq
  PQ wrapper shared object
 
@@ -43,5 +45,16 @@ Package: libpq-dev
 Architecture: any
 Depends: ${misc:Depends},
          libgbinder,
+         libglib2.0-0,
+         libglibutil
 Description: libpq-dev
  PQ wrapper development headers
+
+Package: pqdbus
+Architecture: any
+Depends: ${misc:Depends},
+         libgbinder,
+         libglib2.0-0,
+         libglibutil
+Description: libpq
+ PQ wrapper session dbus service

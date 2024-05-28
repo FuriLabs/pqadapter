@@ -28,7 +28,8 @@ enum PQFunctions : int32_t {
     SET_FEATURE_DISPLAY_OVER_DRIVE,
     SET_FEATURE_ISO_ADAPTIVE_SHARPNESS,
     SET_FEATURE_ULTRA_RESOLUTION,
-    SET_FEATURE_VIDEO_HDR
+    SET_FEATURE_VIDEO_HDR,
+    PQ_FUNCTION_MAX
 };
 
 int init_pq_hidl(const int func, const int mode);

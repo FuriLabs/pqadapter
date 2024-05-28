@@ -9,3 +9,5 @@ override_dh_auto_install:
 	install -D -m 0644 gsd-adapter.service debian/tmp/usr/lib/systemd/user/gsd-adapter.service
 	install -D -m 0644 libpq.so debian/libpq/usr/lib/$(DEB_HOST_MULTIARCH)/libpq.so
 	install -D -m 0644 pq.h debian/tmp/usr/include/pq.h
+	install -D -m 0644 pqdbus debian/tmp/usr/libexec/pqdbus
+	install -D -m 0644 pqdbus.service debian/tmp/usr/lib/systemd/user/pqdbus.service
