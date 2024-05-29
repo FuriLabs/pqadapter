@@ -16,7 +16,7 @@
 
 static void on_night_light_enabled(GSettings *settings, gchar *key, gpointer data) {
     gboolean night_light_enabled = g_settings_get_boolean(settings, key);
-    //printf("Current Night Light setting: %s\n", night_light_enabled ? "enabled" : "disabled");
+    printf("Current Night Light setting: %s\n", night_light_enabled ? "enabled" : "disabled");
 
     // 2 is enableBlueLight in this context
     if (night_light_enabled) {
@@ -44,7 +44,7 @@ static void on_night_light_temperature_changed(GSettings *settings, gchar *key, 
         double scaled_temperature = (double)(reversed_temperature - original_min_temperature) * (scale_max - scale_min) / (original_max_temperature - original_min_temperature) + scale_min;
         scaled_temperature = scaled_temperature * 0.3;
 
-        //printf("Night Light temperature mapped: %.0f \n", scaled_temperature);
+        printf("Night Light temperature mapped: %.0f \n", scaled_temperature);
 
         // 3 is setBlueLightStrength in this context
         init_pq_hidl(SET_BLUE_LIGHT_STRENGTH, (int)scaled_temperature);
@@ -65,7 +65,7 @@ static void clear_directory(const char *path) {
         }
         closedir(dir);
         rmdir(path);
-        //printf("GStreamer cache cleared.\n");
+        printf("GStreamer cache cleared.\n");
     }
 }
 
@@ -82,12 +82,12 @@ static void on_privacy_setting_changed(GSettings *settings, gchar *key, gpointer
             if (property_get("init.svc.camerahalserver", service_state, "stopped") && strcmp(service_state, "running") == 0) {
                 // Stop the camera HAL server
                 property_set("ctl.stop", "camerahalserver");
-                //printf("Camera HAL server stopped.\n");
+                printf("Camera HAL server stopped.\n");
             }
         } else {
             if (property_get("init.svc.camerahalserver", service_state, "running") && strcmp(service_state, "stopped") == 0) {
                 property_set("ctl.start", "camerahalserver");
-                //printf("Camera HAL server started.\n");
+                printf("Camera HAL server started.\n");
 
                 char cache_dir[512];
                 snprintf(cache_dir, sizeof(cache_dir), "%s/.cache/gstreamer-1.0", getenv("HOME"));
@@ -106,13 +106,15 @@ static void on_location_setting_changed(GSettings *settings, gchar *key, gpointe
         if (property_get("init.svc.vendor.gnss-default", service_state, "running") && strcmp(service_state, "stopped") == 0) {
             // Start the GNSS service
             property_set("ctl.start", "vendor.gnss-default");
-            //printf("GNSS service started.\n");
+            printf("GNSS service started.\n");
+            system("systemctl restart geoclue");
         }
     } else {
         if (property_get("init.svc.vendor.gnss-default", service_state, "stopped") && strcmp(service_state, "running") == 0) {
             // Stop the GNSS service
             property_set("ctl.stop", "vendor.gnss-default");
-            //printf("GNSS service stopped.\n");
+            printf("GNSS service stopped.\n");
+            system("systemctl stop geoclue");
         }
     }
 }
@@ -125,28 +127,7 @@ void pq_startup() {
         return;
     }
 
-    int functions[PQ_FUNCTION_MAX] = {
-        SET_PQ_MODE,
-        ENABLE_BLUE_LIGHT,
-        SET_BLUE_LIGHT_STRENGTH,
-        ENABLE_CHAMELEON,
-        SET_CHAMELEON_STRENGTH,
-        SET_GAMMA_INDEX,
-        SET_FEATURE_DISPLAY_COLOR,
-        SET_FEATURE_CONTENT_COLOR,
-        SET_FEATURE_CONTENT_COLOR_VIDEO,
-        SET_FEATURE_SHARPNESS,
-        SET_FEATURE_DYNAMIC_CONTRAST,
-        SET_FEATURE_DYNAMIC_SHARPNESS,
-        SET_FEATURE_DISPLAY_CCORR,
-        SET_FEATURE_DISPLAY_GAMMA,
-        SET_FEATURE_DISPLAY_OVER_DRIVE,
-        SET_FEATURE_ISO_ADAPTIVE_SHARPNESS,
-        SET_FEATURE_ULTRA_RESOLUTION,
-        SET_FEATURE_VIDEO_HDR
-    };
-
-    const char *keys[PQ_FUNCTION_MAX] = {
+    const char *keys[PQ_FUNCTION_MAX - 1] = {
         "pq-mode",
         "blue-light",
         "blue-light-strength",
@@ -164,13 +145,16 @@ void pq_startup() {
         "display-over-drive",
         "iso-adaptive-sharpness",
         "ultra-resolution",
-        "video-hdr"
+        "video-hdr",
+        "global-pq-switch",
+        "global-pq-strength"
     };
 
     for (int i = 0; i < PQ_FUNCTION_MAX - 1; i++) {
         int mode = g_settings_get_int(settings, keys[i]);
-        //printf("Setting %s to %d\n", keys[i], mode);
-        init_pq_hidl(functions[i], mode);
+        enum PQFunctions function = (enum PQFunctions)(i + 1);
+        printf("Setting %s to %d\n", keys[i], mode);
+        init_pq_hidl(function, mode);
     }
 
     g_object_unref(settings);
