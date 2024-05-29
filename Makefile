@@ -40,6 +40,7 @@ install: all
 	install -D -m 0755 $(PQDBUS_BIN) debian/tmp$(PREFIX)/libexec/$(PQDBUS_BIN)
 	install -D -m 0644 pqdbus.service debian/tmp$(PREFIX)/lib/systemd/user/pqdbus.service
 	install -D -m 0644 io.furios.pq.gschema.xml debian/tmp$(PREFIX)/share/glib-2.0/schemas/io.furios.pq.gschema.xml
+	install -D -m 0644 50-org.freedesktop.systemd1.manage-units.rules debian/tmp$(PREFIX)/share/polkit-1/rules.d/50-org.freedesktop.systemd1.manage-units.rules
 
 compile-schemas:
 	glib-compile-schemas debian/tmp$(PREFIX)/share/glib-2.0/schemas/
