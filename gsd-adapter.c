@@ -20,6 +20,7 @@ typedef struct {
     GSettings *settings_location;
     GSettings *settings_pq;
     GMainLoop *main_loop;
+    PQContext *pq_ctx;
 
     guint32 original_min_temperature;
     guint32 original_max_temperature;
@@ -35,6 +36,12 @@ init_app_settings()
     AppSettings* settings = malloc(sizeof(AppSettings));
     if (!settings)
         return NULL;
+
+    settings->pq_ctx = init_pq_hidl();
+    if (!settings->pq_ctx) {
+        free(settings);
+        return NULL;
+    }
 
     settings->settings_color = g_settings_new("org.gnome.settings-daemon.plugins.color");
     settings->settings_privacy = g_settings_new("org.gnome.desktop.privacy");
@@ -78,20 +85,24 @@ init_app_settings()
 }
 
 static void
-on_night_light_enabled(GSettings *settings, gchar *key, gpointer data)
+on_night_light_enabled(GSettings *settings,
+                       gchar *key,
+                       gpointer data)
 {
     AppSettings *app_settings = (AppSettings*)data;
     gboolean night_light_enabled = g_settings_get_boolean(settings, key);
-    printf("Current Night Light setting: %s\n", night_light_enabled ? "enabled" : "disabled");
+    g_print("Current Night Light setting: %s\n", night_light_enabled ? "enabled" : "disabled");
 
     if (night_light_enabled)
-        init_pq_hidl(ENABLE_BLUE_LIGHT, 1);
+        enable_blue_light_hidl(app_settings->pq_ctx->client, 1, app_settings->settings_pq);
     else
-        init_pq_hidl(ENABLE_BLUE_LIGHT, 0);
+        enable_blue_light_hidl(app_settings->pq_ctx->client, 0, app_settings->settings_pq);
 }
 
 static void
-on_night_light_temperature_changed(GSettings *settings, gchar *key, gpointer data)
+on_night_light_temperature_changed(GSettings *settings,
+                                   gchar *key,
+                                   gpointer data)
 {
     AppSettings *app_settings = (AppSettings*)data;
     gboolean night_light_enabled = g_settings_get_boolean(settings, "night-light-enabled");
@@ -108,8 +119,10 @@ on_night_light_temperature_changed(GSettings *settings, gchar *key, gpointer dat
                                   app_settings->scale_min;
         scaled_temperature = scaled_temperature * 0.3;
 
-        printf("Night Light temperature mapped: %.0f \n", scaled_temperature);
-        init_pq_hidl(SET_BLUE_LIGHT_STRENGTH, (int)scaled_temperature);
+        g_print("Night Light temperature mapped: %.0f \n", scaled_temperature);
+        set_blue_light_strength_hidl(app_settings->pq_ctx->client,
+                                     (int)scaled_temperature,
+                                     app_settings->settings_pq);
     }
 }
 
@@ -128,16 +141,18 @@ clear_directory(const char *path)
         }
         closedir(dir);
         rmdir(path);
-        printf("GStreamer cache cleared.\n");
+        g_print("GStreamer cache cleared.\n");
     }
 }
 
 static void
-on_privacy_setting_changed(GSettings *settings, gchar *key, gpointer data)
+on_privacy_setting_changed(GSettings *settings,
+                           gchar *key,
+                           gpointer data)
 {
     AppSettings *app_settings = (AppSettings*)data;
     gboolean setting_value = g_settings_get_boolean(settings, key);
-    printf("Privacy setting '%s' changed to: %s\n", key, setting_value ? "true" : "false");
+    g_print("Privacy setting '%s' changed to: %s\n", key, setting_value ? "true" : "false");
 
     if (g_strcmp0(key, "disable-microphone") == 0) {
         set_capture_state("default", "Capture", setting_value ? 0 : 1);
@@ -147,13 +162,13 @@ on_privacy_setting_changed(GSettings *settings, gchar *key, gpointer data)
             if (property_get("init.svc.camerahalserver", service_state, "stopped") &&
                 strcmp(service_state, "running") == 0) {
                 property_set("ctl.stop", "camerahalserver");
-                printf("Camera HAL server stopped.\n");
+                g_print("Camera HAL server stopped.\n");
             }
         } else {
             if (property_get("init.svc.camerahalserver", service_state, "running") &&
                 strcmp(service_state, "stopped") == 0) {
                 property_set("ctl.start", "camerahalserver");
-                printf("Camera HAL server started.\n");
+                g_print("Camera HAL server started.\n");
 
                 char cache_dir[512];
                 snprintf(cache_dir, sizeof(cache_dir), "%s/.cache/gstreamer-1.0", getenv("HOME"));
@@ -164,25 +179,27 @@ on_privacy_setting_changed(GSettings *settings, gchar *key, gpointer data)
 }
 
 static void
-on_location_setting_changed(GSettings *settings, gchar *key, gpointer data)
+on_location_setting_changed(GSettings *settings,
+                            gchar *key,
+                            gpointer data)
 {
     AppSettings *app_settings = (AppSettings*)data;
     gboolean setting_value = g_settings_get_boolean(settings, key);
-    printf("Location setting '%s' changed to: %s\n", key, setting_value ? "true" : "false");
+    g_print("Location setting '%s' changed to: %s\n", key, setting_value ? "true" : "false");
 
     char service_state[PROP_VALUE_MAX];
     if (setting_value) {
         if (property_get("init.svc.vendor.gnss-default", service_state, "running") &&
             strcmp(service_state, "stopped") == 0) {
             property_set("ctl.start", "vendor.gnss-default");
-            printf("GNSS service started.\n");
+            g_print("GNSS service started.\n");
             system("systemctl restart geoclue");
         }
     } else {
         if (property_get("init.svc.vendor.gnss-default", service_state, "stopped") &&
             strcmp(service_state, "running") == 0) {
             property_set("ctl.stop", "vendor.gnss-default");
-            printf("GNSS service stopped.\n");
+            g_print("GNSS service stopped.\n");
             system("systemctl stop geoclue");
         }
     }
@@ -198,9 +215,70 @@ pq_gsettings_init(AppSettings *app_settings)
 
     for (int i = 0; i < PQ_FUNCTION_MAX - 1; i++) {
         int mode = g_settings_get_int(app_settings->settings_pq, app_settings->pq_keys[i]);
-        enum PQFunctions function = (enum PQFunctions)(i + 1);
-        printf("Setting %s to %d\n", app_settings->pq_keys[i], mode);
-        init_pq_hidl(function, mode);
+        g_print("Setting %s to %d\n", app_settings->pq_keys[i], mode);
+
+        switch (i + 1) {
+            case 1:
+                set_pq_mode_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 2:
+                enable_blue_light_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 3:
+                set_blue_light_strength_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 4:
+                enable_chameleon_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 5:
+                set_chameleon_strength_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 6:
+                set_gamma_index_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 7:
+                set_feature_display_color_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 8:
+                set_feature_content_color_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 9:
+                set_feature_content_color_video_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 10:
+                set_feature_sharpness_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 11:
+                set_feature_dynamic_contrast_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 12:
+                set_feature_dynamic_sharpness_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 13:
+                set_feature_display_ccorr_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 14:
+                set_feature_display_gamma_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 15:
+                set_feature_display_over_drive_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 16:
+                set_feature_iso_adaptive_sharpness_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 17:
+                set_feature_ultra_resolution_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 18:
+                set_feature_video_hdr_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 19:
+                set_global_pq_switch_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+            case 20:
+                set_global_pq_strength_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                break;
+        }
     }
 }
 

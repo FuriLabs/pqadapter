@@ -9,23 +9,11 @@
 #include <stdlib.h>
 #include <gio/gio.h>
 
-enum PQFeatureID : int32_t {
-    DISPLAY_COLOR = 0,
-    CONTENT_COLOR,
-    CONTENT_COLOR_VIDEO,
-    SHARPNESS,
-    DYNAMIC_CONTRAST,
-    DYNAMIC_SHARPNESS,
-    DISPLAY_CCORR,
-    DISPLAY_GAMMA,
-    DISPLAY_OVER_DRIVE,
-    ISO_ADAPTIVE_SHARPNESS,
-    ULTRA_RESOLUTION,
-    VIDEO_HDR,
-    PQ_FEATURE_MAX
-};
-
-void set_pq_mode_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_pq_mode_hidl(GBinderClient* client,
+                 const int mode,
+                 GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -43,7 +31,11 @@ void set_pq_mode_hidl(GBinderClient* client, const int mode, GSettings *settings
     }
 }
 
-void enable_blue_light_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+enable_blue_light_hidl(GBinderClient* client,
+                       const int mode,
+                       GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -61,7 +53,11 @@ void enable_blue_light_hidl(GBinderClient* client, const int mode, GSettings *se
     }
 }
 
-void set_blue_light_strength_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_blue_light_strength_hidl(GBinderClient* client,
+                             const int mode,
+                             GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -79,7 +75,11 @@ void set_blue_light_strength_hidl(GBinderClient* client, const int mode, GSettin
     }
 }
 
-void enable_chameleon_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+enable_chameleon_hidl(GBinderClient* client,
+                      const int mode,
+                      GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -97,7 +97,11 @@ void enable_chameleon_hidl(GBinderClient* client, const int mode, GSettings *set
     }
 }
 
-void set_chameleon_strength_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_chameleon_strength_hidl(GBinderClient* client,
+                            const int mode,
+                            GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -115,7 +119,11 @@ void set_chameleon_strength_hidl(GBinderClient* client, const int mode, GSetting
     }
 }
 
-void set_gamma_index_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_gamma_index_hidl(GBinderClient* client,
+                     const int mode,
+                     GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -133,7 +141,11 @@ void set_gamma_index_hidl(GBinderClient* client, const int mode, GSettings *sett
     }
 }
 
-void set_feature_display_color_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_display_color_hidl(GBinderClient* client,
+                               const int mode,
+                               GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -151,7 +163,11 @@ void set_feature_display_color_hidl(GBinderClient* client, const int mode, GSett
     }
 }
 
-void set_feature_content_color_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_content_color_hidl(GBinderClient* client,
+                               const int mode,
+                               GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -169,7 +185,11 @@ void set_feature_content_color_hidl(GBinderClient* client, const int mode, GSett
     }
 }
 
-void set_feature_content_color_video_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_content_color_video_hidl(GBinderClient* client,
+                                     const int mode,
+                                     GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -187,7 +207,11 @@ void set_feature_content_color_video_hidl(GBinderClient* client, const int mode,
     }
 }
 
-void set_feature_sharpness_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_sharpness_hidl(GBinderClient* client,
+                           const int mode,
+                           GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -205,7 +229,11 @@ void set_feature_sharpness_hidl(GBinderClient* client, const int mode, GSettings
     }
 }
 
-void set_feature_dynamic_contrast_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_dynamic_contrast_hidl(GBinderClient* client,
+                                  const int mode,
+                                  GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -223,7 +251,11 @@ void set_feature_dynamic_contrast_hidl(GBinderClient* client, const int mode, GS
     }
 }
 
-void set_feature_dynamic_sharpness_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_dynamic_sharpness_hidl(GBinderClient* client,
+                                   const int mode,
+                                   GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -241,7 +273,11 @@ void set_feature_dynamic_sharpness_hidl(GBinderClient* client, const int mode, G
     }
 }
 
-void set_feature_display_ccorr_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_display_ccorr_hidl(GBinderClient* client,
+                               const int mode,
+                               GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -259,7 +295,11 @@ void set_feature_display_ccorr_hidl(GBinderClient* client, const int mode, GSett
     }
 }
 
-void set_feature_display_gamma_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_display_gamma_hidl(GBinderClient* client,
+                               const int mode,
+                               GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -277,7 +317,11 @@ void set_feature_display_gamma_hidl(GBinderClient* client, const int mode, GSett
     }
 }
 
-void set_feature_display_over_drive_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_display_over_drive_hidl(GBinderClient* client,
+                                    const int mode,
+                                    GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -295,7 +339,11 @@ void set_feature_display_over_drive_hidl(GBinderClient* client, const int mode, 
     }
 }
 
-void set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client,
+                                        const int mode,
+                                        GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -313,7 +361,11 @@ void set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client, const int mo
     }
 }
 
-void set_feature_ultra_resolution_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_ultra_resolution_hidl(GBinderClient* client,
+                                  const int mode,
+                                  GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -331,7 +383,11 @@ void set_feature_ultra_resolution_hidl(GBinderClient* client, const int mode, GS
     }
 }
 
-void set_feature_video_hdr_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_feature_video_hdr_hidl(GBinderClient* client,
+                           const int mode,
+                           GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -349,7 +405,11 @@ void set_feature_video_hdr_hidl(GBinderClient* client, const int mode, GSettings
     }
 }
 
-void set_global_pq_switch_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_global_pq_switch_hidl(GBinderClient* client,
+                          const int mode,
+                          GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -366,7 +426,11 @@ void set_global_pq_switch_hidl(GBinderClient* client, const int mode, GSettings 
     }
 }
 
-void set_global_pq_strength_hidl(GBinderClient* client, const int mode, GSettings *settings) {
+void
+set_global_pq_strength_hidl(GBinderClient* client,
+                            const int mode,
+                            GSettings *settings)
+{
     int status;
     GBinderLocalRequest* req = gbinder_client_new_request(client);
     GBinderWriter writer;
@@ -383,9 +447,65 @@ void set_global_pq_strength_hidl(GBinderClient* client, const int mode, GSetting
     }
 }
 
-int init_pq_hidl(const int func, const int mode) {
+PQContext *
+init_pq_hidl(void)
+{
+    PQContext* ctx = malloc(sizeof(PQContext));
+    if (!ctx) return NULL;
+
+    ctx->sm = NULL;
+    ctx->remote = NULL;
+    ctx->client = NULL;
+
+    ctx->sm = gbinder_servicemanager_new("/dev/hwbinder");
+    if (!ctx->sm) {
+        free(ctx);
+        return NULL;
+    }
+
+    ctx->remote = gbinder_servicemanager_get_service_sync(ctx->sm,
+        "vendor.mediatek.hardware.pq@2.0::IPictureQuality/default", NULL);
+    if (!ctx->remote) {
+        gbinder_servicemanager_unref(ctx->sm);
+        free(ctx);
+        return NULL;
+    }
+
+    ctx->client = gbinder_client_new(ctx->remote,
+        "vendor.mediatek.hardware.pq@2.0::IPictureQuality");
+    if (!ctx->client) {
+        gbinder_remote_object_unref(ctx->remote);
+        gbinder_servicemanager_unref(ctx->sm);
+        free(ctx);
+        return NULL;
+    }
+
+    return ctx;
+}
+
+void
+cleanup_pq_hidl(PQContext* ctx)
+{
+    if (!ctx)
+        return;
+    if (ctx->client)
+        gbinder_client_unref(ctx->client);
+    if (ctx->remote)
+        gbinder_remote_object_unref(ctx->remote);
+    if (ctx->sm)
+        gbinder_servicemanager_unref(ctx->sm);
+    free(ctx);
+}
+
+int
+run_pq_hidl(const int func,
+            const int mode)
+{
+    int retval = 0;
+
     GBinderServiceManager* sm = gbinder_servicemanager_new("/dev/hwbinder");
-    if (!sm) return 1;
+    if (!sm)
+        return 1;
 
     GBinderRemoteObject* remote = gbinder_servicemanager_get_service_sync(sm, "vendor.mediatek.hardware.pq@2.0::IPictureQuality/default", NULL);
     if (!remote) {
@@ -404,66 +524,54 @@ int init_pq_hidl(const int func, const int mode) {
     GSettingsSchema *schema = g_settings_schema_source_lookup(schema_source, "io.furios.pq", TRUE);
     GSettings *settings = schema ? g_settings_new("io.furios.pq") : NULL;
 
-    if (func == 1) {
+    if (func == 1)
         set_pq_mode_hidl(client, mode, settings);
-    } else if (func == 2) {
+    else if (func == 2)
         enable_blue_light_hidl(client, mode, settings);
-    } else if (func == 3) {
+    else if (func == 3)
         set_blue_light_strength_hidl(client, mode, settings);
-    } else if (func == 4) {
+    else if (func == 4)
         enable_chameleon_hidl(client, mode, settings);
-    } else if (func == 5) {
+    else if (func == 5)
         set_chameleon_strength_hidl(client, mode, settings);
-    } else if (func == 6) {
+    else if (func == 6)
         set_gamma_index_hidl(client, mode, settings);
-    } else if (func == 7) {
+    else if (func == 7)
         set_feature_display_color_hidl(client, mode, settings);
-    } else if (func == 8) {
+    else if (func == 8)
         set_feature_content_color_hidl(client, mode, settings);
-    } else if (func == 9) {
+    else if (func == 9)
         set_feature_content_color_video_hidl(client, mode, settings);
-    } else if (func == 10) {
+    else if (func == 10)
         set_feature_sharpness_hidl(client, mode, settings);
-    } else if (func == 11) {
+    else if (func == 11)
         set_feature_dynamic_contrast_hidl(client, mode, settings);
-    } else if (func == 12) {
+    else if (func == 12)
         set_feature_dynamic_sharpness_hidl(client, mode, settings);
-    } else if (func == 13) {
+    else if (func == 13)
         set_feature_display_ccorr_hidl(client, mode, settings);
-    } else if (func == 14) {
+    else if (func == 14)
         set_feature_display_gamma_hidl(client, mode, settings);
-    } else if (func == 15) {
+    else if (func == 15)
         set_feature_display_over_drive_hidl(client, mode, settings);
-    } else if (func == 16) {
+    else if (func == 16)
         set_feature_iso_adaptive_sharpness_hidl(client, mode, settings);
-    } else if (func == 17) {
+    else if (func == 17)
         set_feature_ultra_resolution_hidl(client, mode, settings);
-    } else if (func == 18) {
+    else if (func == 18)
         set_feature_video_hdr_hidl(client, mode, settings);
-    } else if (func == 19) {
+    else if (func == 19)
         set_global_pq_switch_hidl(client, mode, settings);
-    } else if (func == 20) {
+    else if (func == 20)
         set_global_pq_strength_hidl(client, mode, settings);
-    } else {
-        if (settings) {
-            g_object_unref(settings);
-        }
+    else
+        retval = 1;
 
-        gbinder_client_unref(client);
-
-        if (!remote) {
-            gbinder_remote_object_unref(remote);
-        }
-
-        return 1;
-    }
-
-    g_object_unref(settings);
+cleanup:
     gbinder_client_unref(client);
-
-    if (!remote) {
+    if (settings)
+        g_object_unref(settings);
+    if (!remote)
         gbinder_remote_object_unref(remote);
-    }
-
-    return 0;
+    return retval;
 }

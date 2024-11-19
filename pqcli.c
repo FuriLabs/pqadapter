@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     int input = atoi(argv[2]);
 
     if (is_func_valid(func)) {
-        int ret = init_pq_hidl(func, input);
+        int ret = run_pq_hidl(func, input);
 
         if (ret != 0) {
            printf("None of the backends are available for PQ. Exiting.\n");
