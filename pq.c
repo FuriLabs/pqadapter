@@ -22,7 +22,7 @@ set_pq_mode_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, mode);
     gbinder_writer_append_int32(&writer, 5);
-    gbinder_client_transact_sync_reply(client, 3, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_PQ_MODE, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -44,7 +44,7 @@ enable_blue_light_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_bool(&writer, mode);
     gbinder_writer_append_int32(&writer, 5);
-    gbinder_client_transact_sync_reply(client, 14, req, &status);
+    gbinder_client_transact_sync_reply(client, ENABLE_BLUE_LIGHT, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -66,7 +66,7 @@ set_blue_light_strength_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, mode);
     gbinder_writer_append_int32(&writer, 5);
-    gbinder_client_transact_sync_reply(client, 16, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_BLUE_LIGHT_STRENGTH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -88,7 +88,7 @@ enable_chameleon_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_bool(&writer, mode);
     gbinder_writer_append_int32(&writer, 5);
-    gbinder_client_transact_sync_reply(client, 18, req, &status);
+    gbinder_client_transact_sync_reply(client, ENABLE_CHAMELEON, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -110,7 +110,7 @@ set_chameleon_strength_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, mode);
     gbinder_writer_append_int32(&writer, 5);
-    gbinder_client_transact_sync_reply(client, 20, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_CHAMELEON_STRENGTH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -132,7 +132,7 @@ set_gamma_index_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_bool(&writer, mode);
     gbinder_writer_append_int32(&writer, 5);
-    gbinder_client_transact_sync_reply(client, 27, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_GAMMA_INDEX, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -154,7 +154,7 @@ set_feature_display_color_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, DISPLAY_COLOR);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -176,7 +176,7 @@ set_feature_content_color_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, CONTENT_COLOR);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -198,7 +198,7 @@ set_feature_content_color_video_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, CONTENT_COLOR_VIDEO);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -220,7 +220,7 @@ set_feature_sharpness_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, SHARPNESS);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -242,7 +242,7 @@ set_feature_dynamic_contrast_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, DYNAMIC_CONTRAST);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -264,7 +264,7 @@ set_feature_dynamic_sharpness_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, DYNAMIC_SHARPNESS);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -286,7 +286,7 @@ set_feature_display_ccorr_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, DISPLAY_CCORR);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -308,7 +308,7 @@ set_feature_display_gamma_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, DISPLAY_GAMMA);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -330,7 +330,7 @@ set_feature_display_over_drive_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, DISPLAY_OVER_DRIVE);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -352,7 +352,7 @@ set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, ISO_ADAPTIVE_SHARPNESS);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -374,7 +374,7 @@ set_feature_ultra_resolution_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, ULTRA_RESOLUTION);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -396,7 +396,7 @@ set_feature_video_hdr_hidl(GBinderClient* client,
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, VIDEO_HDR);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 12, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_FEATURE_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -417,7 +417,7 @@ set_global_pq_switch_hidl(GBinderClient* client,
     // setGlobalPQSwitch
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 34, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_GLOBAL_PQ_SWITCH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {
@@ -438,7 +438,7 @@ set_global_pq_strength_hidl(GBinderClient* client,
     // setGlobalPQStrength
     gbinder_local_request_init_writer(req, &writer);
     gbinder_writer_append_int32(&writer, mode);
-    gbinder_client_transact_sync_reply(client, 36, req, &status);
+    gbinder_client_transact_sync_reply(client, SET_GLOBAL_PQ_STRENGTH, req, &status);
     gbinder_local_request_unref(req);
 
     if (settings) {

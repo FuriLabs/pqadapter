@@ -27,7 +27,7 @@ typedef struct {
     guint32 scale_min;
     guint32 scale_max;
 
-    const char *pq_keys[PQ_FUNCTION_MAX - 1];
+    const char *pq_keys[20];
 } AppSettings;
 
 static AppSettings *
@@ -77,7 +77,7 @@ init_app_settings()
         "global-pq-strength"
     };
 
-    for (int i = 0; i < PQ_FUNCTION_MAX - 1; i++) {
+    for (int i = 0; i < 20; i++) {
         settings->pq_keys[i] = keys[i];
     }
 
@@ -213,7 +213,7 @@ pq_gsettings_init(AppSettings *app_settings)
         return;
     }
 
-    for (int i = 0; i < PQ_FUNCTION_MAX - 1; i++) {
+    for (int i = 0; i < 20; i++) {
         int mode = g_settings_get_int(app_settings->settings_pq, app_settings->pq_keys[i]);
         g_print("Setting %s to %d\n", app_settings->pq_keys[i], mode);
 
