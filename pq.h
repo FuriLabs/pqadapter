@@ -98,10 +98,11 @@ void cleanup_pq_hidl(PQContext* ctx);
  * @param client GBinder client instance
  * @param mode PQ mode to set
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setPQMode successfully executed, error code otherwise
  */
-void set_pq_mode_hidl(GBinderClient* client,
-                      const int mode,
-                      GSettings *settings);
+int set_pq_mode_hidl(GBinderClient* client,
+                     const int mode,
+                     GSettings *settings);
 
 /**
  * Enable or disable blue light filter
@@ -109,10 +110,11 @@ void set_pq_mode_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode 1 to enable, 0 to disable
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if enableBlueLight successfully executed, error code otherwise
  */
-void enable_blue_light_hidl(GBinderClient* client,
-                            const int mode,
-                            GSettings *settings);
+int enable_blue_light_hidl(GBinderClient* client,
+                           const int mode,
+                           GSettings *settings);
 
 /**
  * Set blue light filter strength
@@ -120,10 +122,11 @@ void enable_blue_light_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Strength value (0-1000)
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setBlueLightStrength successfully executed, error code otherwise
  */
-void set_blue_light_strength_hidl(GBinderClient* client,
-                                  const int mode,
-                                  GSettings *settings);
+int set_blue_light_strength_hidl(GBinderClient* client,
+                                 const int mode,
+                                 GSettings *settings);
 
 /**
  * Enable or disable chameleon mode
@@ -131,10 +134,11 @@ void set_blue_light_strength_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode 1 to enable, 0 to disable
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if enableChameleon successfully executed, error code otherwise
  */
-void enable_chameleon_hidl(GBinderClient* client,
-                           const int mode,
-                           GSettings *settings);
+int enable_chameleon_hidl(GBinderClient* client,
+                          const int mode,
+                          GSettings *settings);
 
 /**
  * Set chameleon mode strength
@@ -142,10 +146,11 @@ void enable_chameleon_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Strength value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setChameleonStrength successfully executed, error code otherwise
  */
-void set_chameleon_strength_hidl(GBinderClient* client,
-                                 const int mode,
-                                 GSettings *settings);
+int set_chameleon_strength_hidl(GBinderClient* client,
+                                const int mode,
+                                GSettings *settings);
 
 /**
  * Set gamma index value
@@ -153,10 +158,11 @@ void set_chameleon_strength_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Gamma index value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setGammaIndex successfully executed, error code otherwise
  */
-void set_gamma_index_hidl(GBinderClient* client,
-                          const int mode,
-                          GSettings *settings);
+int set_gamma_index_hidl(GBinderClient* client,
+                         const int mode,
+                         GSettings *settings);
 
 /**
  * Configure display color feature
@@ -164,10 +170,11 @@ void set_gamma_index_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_display_color_hidl(GBinderClient* client,
-                                    const int mode,
-                                    GSettings *settings);
+int set_feature_display_color_hidl(GBinderClient* client,
+                                   const int mode,
+                                   GSettings *settings);
 
 /**
  * Configure content color feature
@@ -175,10 +182,11 @@ void set_feature_display_color_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_content_color_hidl(GBinderClient* client,
-                                    const int mode,
-                                    GSettings *settings);
+int set_feature_content_color_hidl(GBinderClient* client,
+                                   const int mode,
+                                   GSettings *settings);
 
 /**
  * Configure video content color feature
@@ -186,10 +194,11 @@ void set_feature_content_color_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_content_color_video_hidl(GBinderClient* client,
-                                          const int mode,
-                                          GSettings *settings);
+int set_feature_content_color_video_hidl(GBinderClient* client,
+                                         const int mode,
+                                         GSettings *settings);
 
 /**
  * Set display sharpness level
@@ -197,10 +206,11 @@ void set_feature_content_color_video_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Sharpness value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_sharpness_hidl(GBinderClient* client,
-                                const int mode,
-                                GSettings *settings);
+int set_feature_sharpness_hidl(GBinderClient* client,
+                               const int mode,
+                               GSettings *settings);
 
 /**
  * Configure dynamic contrast feature
@@ -208,10 +218,11 @@ void set_feature_sharpness_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_dynamic_contrast_hidl(GBinderClient* client,
-                                       const int mode,
-                                       GSettings *settings);
+int set_feature_dynamic_contrast_hidl(GBinderClient* client,
+                                      const int mode,
+                                      GSettings *settings);
 
 /**
  * Configure dynamic sharpness feature
@@ -219,10 +230,11 @@ void set_feature_dynamic_contrast_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_dynamic_sharpness_hidl(GBinderClient* client,
-                                        const int mode,
-                                        GSettings *settings);
+int set_feature_dynamic_sharpness_hidl(GBinderClient* client,
+                                       const int mode,
+                                       GSettings *settings);
 
 /**
  * Configure display CCORR feature
@@ -230,10 +242,11 @@ void set_feature_dynamic_sharpness_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_display_ccorr_hidl(GBinderClient* client,
-                                    const int mode,
-                                    GSettings *settings);
+int set_feature_display_ccorr_hidl(GBinderClient* client,
+                                   const int mode,
+                                   GSettings *settings);
 
 /**
  * Configure display gamma feature
@@ -241,10 +254,11 @@ void set_feature_display_ccorr_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_display_gamma_hidl(GBinderClient* client,
-                                    const int mode,
-                                    GSettings *settings);
+int set_feature_display_gamma_hidl(GBinderClient* client,
+                                   const int mode,
+                                   GSettings *settings);
 
 /**
  * Configure display overdrive feature
@@ -252,10 +266,11 @@ void set_feature_display_gamma_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_display_over_drive_hidl(GBinderClient* client,
-                                         const int mode,
-                                         GSettings *settings);
+int set_feature_display_over_drive_hidl(GBinderClient* client,
+                                        const int mode,
+                                        GSettings *settings);
 
 /**
  * Configure ISO adaptive sharpness feature
@@ -263,10 +278,11 @@ void set_feature_display_over_drive_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client,
-                                             const int mode,
-                                             GSettings *settings);
+int set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client,
+                                            const int mode,
+                                            GSettings *settings);
 
 /**
  * Configure ultra resolution feature
@@ -274,10 +290,11 @@ void set_feature_iso_adaptive_sharpness_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_ultra_resolution_hidl(GBinderClient* client,
-                                       const int mode,
-                                       GSettings *settings);
+int set_feature_ultra_resolution_hidl(GBinderClient* client,
+                                      const int mode,
+                                      GSettings *settings);
 
 /**
  * Configure video HDR feature
@@ -285,10 +302,11 @@ void set_feature_ultra_resolution_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Feature mode value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setFeatureSwitch successfully executed, error code otherwise
  */
-void set_feature_video_hdr_hidl(GBinderClient* client,
-                                const int mode,
-                                GSettings *settings);
+int set_feature_video_hdr_hidl(GBinderClient* client,
+                               const int mode,
+                               GSettings *settings);
 
 /**
  * Configure global PQ switch
@@ -296,10 +314,11 @@ void set_feature_video_hdr_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Switch value (0/1)
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setGlobalPQSwitch successfully executed, error code otherwise
  */
-void set_global_pq_switch_hidl(GBinderClient* client,
-                               const int mode,
-                               GSettings *settings);
+int set_global_pq_switch_hidl(GBinderClient* client,
+                              const int mode,
+                              GSettings *settings);
 
 /**
  * Set global PQ strength
@@ -307,10 +326,11 @@ void set_global_pq_switch_hidl(GBinderClient* client,
  * @param client GBinder client instance
  * @param mode Strength value
  * @param settings GSettings instance for persisting the setting
+ * @return retval 0 if setGlobalPQStrength successfully executed, error code otherwise
  */
-void set_global_pq_strength_hidl(GBinderClient* client,
-                                 const int mode,
-                                 GSettings *settings);
+int set_global_pq_strength_hidl(GBinderClient* client,
+                                const int mode,
+                                GSettings *settings);
 
 /**
  * Run a PQ HIDL command
