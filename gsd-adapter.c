@@ -94,9 +94,9 @@ on_night_light_enabled(GSettings *settings,
     g_print("Current Night Light setting: %s\n", night_light_enabled ? "enabled" : "disabled");
 
     if (night_light_enabled)
-        enable_blue_light_hidl(app_settings->pq_ctx->client, 1, app_settings->settings_pq);
+        enable_blue_light_hidl(app_settings->pq_ctx->client, 1, 5 /* step */, app_settings->settings_pq);
     else
-        enable_blue_light_hidl(app_settings->pq_ctx->client, 0, app_settings->settings_pq);
+        enable_blue_light_hidl(app_settings->pq_ctx->client, 0, 5 /* step */, app_settings->settings_pq);
 }
 
 static void
@@ -122,6 +122,7 @@ on_night_light_temperature_changed(GSettings *settings,
         g_print("Night Light temperature mapped: %.0f \n", scaled_temperature);
         set_blue_light_strength_hidl(app_settings->pq_ctx->client,
                                      (int)scaled_temperature,
+                                     5 /* step */,
                                      app_settings->settings_pq);
     }
 }
@@ -219,22 +220,22 @@ pq_gsettings_init(AppSettings *app_settings)
 
         switch (i + 1) {
             case 1:
-                set_pq_mode_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                set_pq_mode_hidl(app_settings->pq_ctx->client, mode, 5 /* step */, app_settings->settings_pq);
                 break;
             case 2:
-                enable_blue_light_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                enable_blue_light_hidl(app_settings->pq_ctx->client, mode, 5 /* step */, app_settings->settings_pq);
                 break;
             case 3:
-                set_blue_light_strength_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                set_blue_light_strength_hidl(app_settings->pq_ctx->client, mode, 5 /* step */, app_settings->settings_pq);
                 break;
             case 4:
-                enable_chameleon_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                enable_chameleon_hidl(app_settings->pq_ctx->client, mode, 5 /* step */, app_settings->settings_pq);
                 break;
             case 5:
-                set_chameleon_strength_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                set_chameleon_strength_hidl(app_settings->pq_ctx->client, mode, 5 /* step */, app_settings->settings_pq);
                 break;
             case 6:
-                set_gamma_index_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);
+                set_gamma_index_hidl(app_settings->pq_ctx->client, mode, 5 /* step */, app_settings->settings_pq);
                 break;
             case 7:
                 set_feature_display_color_hidl(app_settings->pq_ctx->client, mode, app_settings->settings_pq);

@@ -129,17 +129,17 @@ handle_method_call(GDBusConnection* connection,
     g_variant_get(parameters, "(i)", &mode);
 
     if (g_strcmp0(method_name, "SetPQMode") == 0)
-        set_pq_mode_hidl(ctx->pq_ctx->client, mode, ctx->settings);
+        set_pq_mode_hidl(ctx->pq_ctx->client, mode, 5 /* step */, ctx->settings);
     else if (g_strcmp0(method_name, "EnableBlueLight") == 0)
-        enable_blue_light_hidl(ctx->pq_ctx->client, mode, ctx->settings);
+        enable_blue_light_hidl(ctx->pq_ctx->client, mode, 5 /* step */, ctx->settings);
     else if (g_strcmp0(method_name, "SetBlueLightStrength") == 0)
-        set_blue_light_strength_hidl(ctx->pq_ctx->client, mode, ctx->settings);
+        set_blue_light_strength_hidl(ctx->pq_ctx->client, mode, 5 /* step */, ctx->settings);
     else if (g_strcmp0(method_name, "EnableChameleon") == 0)
-        enable_chameleon_hidl(ctx->pq_ctx->client, mode, ctx->settings);
+        enable_chameleon_hidl(ctx->pq_ctx->client, mode, 5 /* step */, ctx->settings);
     else if (g_strcmp0(method_name, "SetChameleonStrength") == 0)
-        set_chameleon_strength_hidl(ctx->pq_ctx->client, mode, ctx->settings);
+        set_chameleon_strength_hidl(ctx->pq_ctx->client, mode, 5 /* step */, ctx->settings);
     else if (g_strcmp0(method_name, "SetGammaIndex") == 0)
-        set_gamma_index_hidl(ctx->pq_ctx->client, mode, ctx->settings);
+        set_gamma_index_hidl(ctx->pq_ctx->client, mode, 5 /* step */, ctx->settings);
     else if (g_strcmp0(method_name, "SetFeatureDisplayColor") == 0)
         set_feature_display_color_hidl(ctx->pq_ctx->client, mode, ctx->settings);
     else if (g_strcmp0(method_name, "SetFeatureContentColor") == 0)
