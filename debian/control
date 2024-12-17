@@ -6,7 +6,6 @@ Build-Depends: debhelper-compat (= 13),
                gcc,
                make,
                libglib2.0-dev,
-               libglibutil-dev,
                libgbinder-dev,
                libasound2-dev,
                libandroid-properties-dev,
@@ -16,51 +15,36 @@ Vcs-Git: https://github.com/furilabs/pqadapter.git
 
 Package: pqcli
 Architecture: any
-Depends: ${misc:Depends},
+Depends: ${misc:Depends}, ${shlibs:Depends},
          pq-gsettings,
-         libgbinder,
-         libglib2.0-0,
-         libglibutil
 Description: pqcli
  A binary to tweak mediatek PQ functions
 
 Package: gsd-adapter
 Architecture: any
-Depends: ${misc:Depends},
+Depends: ${misc:Depends}, ${shlibs:Depends},
          pq-gsettings,
-         libgbinder,
-         libglib2.0-0,
-         libglibutil
 Description: gsd-adapter
  A service to handle device specific gsd functions
 
 Package: libpq
 Architecture: any
-Depends: ${misc:Depends},
+Depends: ${misc:Depends}, ${shlibs:Depends},
          pq-gsettings,
-         libgbinder,
-         libglib2.0-0,
-         libglibutil
 Description: libpq
  PQ wrapper shared object
 
 Package: libpq-dev
 Architecture: any
 Depends: ${misc:Depends},
-         pq-gsettings,
-         libgbinder,
-         libglib2.0-0,
-         libglibutil
+         libpq,
 Description: libpq-dev
  PQ wrapper development headers
 
 Package: pqdbus
 Architecture: any
-Depends: ${misc:Depends},
+Depends: ${misc:Depends}, ${shlibs:Depends},
          pq-gsettings,
-         libgbinder,
-         libglib2.0-0,
-         libglibutil
 Description: libpq
  PQ wrapper session dbus service
 
