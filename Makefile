@@ -1,49 +1,62 @@
 CC = gcc
-
 CFLAGS = $(shell pkg-config --cflags glib-2.0 gio-2.0 libgbinder alsa libandroid-properties)
 LDFLAGS = $(shell pkg-config --libs glib-2.0 gio-2.0 libgbinder alsa libandroid-properties)
 
-GSD_ADAPTER_SRC = gsd-adapter.c pq.c alsa.c
-PQCLI_SRC = pqcli.c pq.c
-LIBPQ_SRC = pq.c
-PQDBUS_SRC = pqdbus.c pq.c
+SOURCES_GSD_ADAPTER = gsd-adapter.c pq.c alsa.c
+SOURCES_PQCLI = pqcli.c pq.c
+SOURCES_LIBPQ = pq.c
+SOURCES_PQDBUS = pqdbus.c pq.c
 
-GSD_ADAPTER = gsd-adapter
-PQCLI = pqcli
-LIBPQ = libpq.so
-PQDBUS = pqdbus
+TARGET_GSD_ADAPTER = gsd-adapter
+TARGET_PQCLI = pqcli
+TARGET_LIBPQ = libpq.so
+TARGET_PQDBUS = pqdbus
 
 PREFIX ?= /usr
+TRIPLET ?= $(shell $(CC) -dumpmachine)
 
 .PHONY: all clean install compile-schemas
 
-all: $(GSD_ADAPTER) $(PQCLI) $(LIBPQ) $(PQDBUS)
+all: $(TARGET_GSD_ADAPTER) $(TARGET_PQCLI) $(TARGET_LIBPQ) $(TARGET_PQDBUS)
 
-$(GSD_ADAPTER): $(GSD_ADAPTER_SRC)
+$(TARGET_GSD_ADAPTER): $(SOURCES_GSD_ADAPTER)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
-$(PQCLI): $(PQCLI_SRC)
+$(TARGET_PQCLI): $(SOURCES_PQCLI)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
-$(LIBPQ): $(LIBPQ_SRC)
+$(TARGET_LIBPQ): $(SOURCES_LIBPQ)
 	$(CC) $(CFLAGS) -shared $^ $(LDFLAGS) -o $@
 
-$(PQDBUS): $(PQDBUS_SRC)
+$(TARGET_PQDBUS): $(SOURCES_PQDBUS)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
 install: all
-	install -D -m 0755 $(PQCLI) debian/tmp$(PREFIX)/bin/$(PQCLI)
-	install -D -m 0755 $(GSD_ADAPTER) debian/tmp$(PREFIX)/libexec/$(GSD_ADAPTER)
-	install -D -m 0644 gsd-adapter.service debian/tmp$(PREFIX)/lib/systemd/user/gsd-adapter.service
-	install -D -m 0644 $(LIBPQ) debian/libpq$(PREFIX)/lib/$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)/$(LIBPQ)
-	install -D -m 0644 pq.h debian/tmp$(PREFIX)/include/pq.h
-	install -D -m 0755 $(PQDBUS) debian/tmp$(PREFIX)/libexec/$(PQDBUS)
-	install -D -m 0644 pqdbus.service debian/tmp$(PREFIX)/lib/systemd/user/pqdbus.service
-	install -D -m 0644 io.furios.pq.gschema.xml debian/tmp$(PREFIX)/share/glib-2.0/schemas/io.furios.pq.gschema.xml
-	install -D -m 0644 50-org.freedesktop.systemd1.manage-units.rules debian/tmp$(PREFIX)/share/polkit-1/rules.d/50-org.freedesktop.systemd1.manage-units.rules
+	install -d $(DESTDIR)$(PREFIX)/bin/
+	install -m 0755 $(TARGET_PQCLI) $(DESTDIR)$(PREFIX)/bin/$(PQCLI)
+
+	install -d $(DESTDIR)$(PREFIX)/libexec/
+	install -m 0755 $(TARGET_GSD_ADAPTER) $(DESTDIR)$(PREFIX)/libexec/$(GSD_ADAPTER)
+	install -m 0755 $(TARGET_PQDBUS) $(DESTDIR)$(PREFIX)/libexec/$(PQDBUS)
+
+	install -d $(DESTDIR)$(PREFIX)/lib/systemd/user/
+	install -m 0644 gsd-adapter.service $(DESTDIR)$(PREFIX)/lib/systemd/user/gsd-adapter.service
+	install -m 0644 pqdbus.service $(DESTDIR)$(PREFIX)/lib/systemd/user/pqdbus.service
+
+	install -d $(DESTDIR)$(PREFIX)/lib/$(TRIPLET)/
+	install -m 0644 $(TARGET_LIBPQ) $(DESTDIR)$(PREFIX)/lib/$(TRIPLET)/$(LIBPQ)
+
+	install -d $(DESTDIR)$(PREFIX)/include/
+	install -m 0644 pq.h $(DESTDIR)$(PREFIX)/include/pq.h
+
+	install -d $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/
+	install -m 0644 io.furios.pq.gschema.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/io.furios.pq.gschema.xml
+
+	install -d $(DESTDIR)$(PREFIX)/share/polkit-1/rules.d/
+	install -m 0644 50-org.freedesktop.systemd1.manage-units.rules $(DESTDIR)$(PREFIX)/share/polkit-1/rules.d/50-org.freedesktop.systemd1.manage-units.rules
 
 compile-schemas:
-	glib-compile-schemas debian/tmp$(PREFIX)/share/glib-2.0/schemas/
+	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/
 
 clean:
-	rm -f $(GSD_ADAPTER) $(PQCLI) $(LIBPQ) $(PQDBUS)
+	rm -f $(TARGET_GSD_ADAPTER) $(TARGET_PQCLI) $(TARGET_LIBPQ) $(TARGET_PQDBUS)
