@@ -1,11 +1,13 @@
 CC = gcc
-CFLAGS = $(shell pkg-config --cflags glib-2.0 gio-2.0 libgbinder alsa libandroid-properties)
-LDFLAGS = $(shell pkg-config --libs glib-2.0 gio-2.0 libgbinder alsa libandroid-properties)
 
-SOURCES_GSD_ADAPTER = gsd-adapter.c pq.c alsa.c
-SOURCES_PQCLI = pqcli.c pq.c
-SOURCES_LIBPQ = pq.c
-SOURCES_PQDBUS = pqdbus.c pq.c
+CFLAGS = $(shell pkg-config --cflags gio-2.0 libgbinder) -Iinclude
+LDFLAGS = $(shell pkg-config --libs gio-2.0 libgbinder alsa libandroid-properties)
+
+SOURCES_GSD_ADAPTER = src/gsd-adapter.c src/alsa.c
+SOURCES_PQCLI = src/pqcli.c
+SOURCES_LIBPQ = src/pq.c
+SOURCES_PQDBUS = src/pqdbus.c
+HEADERS = include/pq.h
 
 TARGET_GSD_ADAPTER = gsd-adapter
 TARGET_PQCLI = pqcli
@@ -17,40 +19,35 @@ TRIPLET ?= $(shell $(CC) -dumpmachine)
 
 .PHONY: all clean install compile-schemas
 
-all: $(TARGET_GSD_ADAPTER) $(TARGET_PQCLI) $(TARGET_LIBPQ) $(TARGET_PQDBUS)
-
-$(TARGET_GSD_ADAPTER): $(SOURCES_GSD_ADAPTER)
-	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
-
-$(TARGET_PQCLI): $(SOURCES_PQCLI)
-	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+all: $(TARGET_LIBPQ) $(TARGET_GSD_ADAPTER) $(TARGET_PQCLI) $(TARGET_PQDBUS)
 
 $(TARGET_LIBPQ): $(SOURCES_LIBPQ)
-	$(CC) $(CFLAGS) -shared $^ $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) -fPIC -shared $^ $(LDFLAGS) -o $@
 
-$(TARGET_PQDBUS): $(SOURCES_PQDBUS)
-	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+$(TARGET_GSD_ADAPTER): $(SOURCES_GSD_ADAPTER) $(TARGET_LIBPQ)
+	$(CC) $(CFLAGS) $(SOURCES_GSD_ADAPTER) -L. -lpq $(LDFLAGS) -o $@
+
+$(TARGET_PQCLI): $(SOURCES_PQCLI) $(TARGET_LIBPQ)
+	$(CC) $(CFLAGS) $< -L. -lpq $(LDFLAGS) -o $@
+
+$(TARGET_PQDBUS): $(SOURCES_PQDBUS) $(TARGET_LIBPQ)
+	$(CC) $(CFLAGS) $< -L. -lpq $(LDFLAGS) -o $@
 
 install: all
 	install -d $(DESTDIR)$(PREFIX)/bin/
-	install -m 0755 $(TARGET_PQCLI) $(DESTDIR)$(PREFIX)/bin/$(PQCLI)
-
+	install -m 0755 $(TARGET_PQCLI) $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)$(PREFIX)/libexec/
-	install -m 0755 $(TARGET_GSD_ADAPTER) $(DESTDIR)$(PREFIX)/libexec/$(GSD_ADAPTER)
-	install -m 0755 $(TARGET_PQDBUS) $(DESTDIR)$(PREFIX)/libexec/$(PQDBUS)
-
+	install -m 0755 $(TARGET_GSD_ADAPTER) $(DESTDIR)$(PREFIX)/libexec/
+	install -m 0755 $(TARGET_PQDBUS) $(DESTDIR)$(PREFIX)/libexec/
 	install -d $(DESTDIR)$(PREFIX)/lib/systemd/user/
-	install -m 0644 gsd-adapter.service $(DESTDIR)$(PREFIX)/lib/systemd/user/gsd-adapter.service
-	install -m 0644 pqdbus.service $(DESTDIR)$(PREFIX)/lib/systemd/user/pqdbus.service
-
+	install -m 0644 data/gsd-adapter.service $(DESTDIR)$(PREFIX)/lib/systemd/user/gsd-adapter.service
+	install -m 0644 data/pqdbus.service $(DESTDIR)$(PREFIX)/lib/systemd/user/pqdbus.service
 	install -d $(DESTDIR)$(PREFIX)/lib/$(TRIPLET)/
-	install -m 0644 $(TARGET_LIBPQ) $(DESTDIR)$(PREFIX)/lib/$(TRIPLET)/$(LIBPQ)
-
+	install -m 0644 $(TARGET_LIBPQ) $(DESTDIR)$(PREFIX)/lib/$(TRIPLET)/
 	install -d $(DESTDIR)$(PREFIX)/include/
-	install -m 0644 pq.h $(DESTDIR)$(PREFIX)/include/pq.h
-
+	install -m 0644 $(HEADERS) $(DESTDIR)$(PREFIX)/include/
 	install -d $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/
-	install -m 0644 io.furios.pq.gschema.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/io.furios.pq.gschema.xml
+	install -m 0644 data/io.furios.pq.gschema.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/io.furios.pq.gschema.xml
 
 compile-schemas:
 	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/

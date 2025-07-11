@@ -9,47 +9,45 @@ Build-Depends: debhelper-compat (= 13),
                libgbinder-dev,
                libasound2-dev,
                libandroid-properties-dev,
-Standards-Version: 4.5.0.3
+Standards-Version: 4.7.2
 Vcs-Browser: https://github.com/furilabs/pqadapter
 Vcs-Git: https://github.com/furilabs/pqadapter.git
-
-Package: pqcli
-Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends},
-         pq-gsettings,
-Description: pqcli
- A binary to tweak mediatek PQ functions
-
-Package: gsd-adapter
-Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends},
-         pq-gsettings,
-Description: gsd-adapter
- A service to handle device specific gsd functions
 
 Package: libpq
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends},
-         pq-gsettings,
 Description: libpq
  PQ wrapper shared object
 
 Package: libpq-dev
 Architecture: any
 Depends: ${misc:Depends},
-         libpq,
+          libpq (= ${binary:Version}),
 Description: libpq-dev
  PQ wrapper development headers
+
+Package: pqcli
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+          libpq (= ${binary:Version}),
+Description: pqcli
+ A binary to tweak mediatek PQ functions
+
+Package: gsd-adapter
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+          libpq (= ${binary:Version}),
+Description: gsd-adapter
+ A service to handle device specific gsd functions
 
 Package: pqdbus
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends},
-         pq-gsettings,
-Description: libpq
+          libpq (= ${binary:Version}),
+Description: pqdbus
  PQ wrapper session dbus service
 
 Package: pq-gsettings
 Architecture: any
 Depends: ${misc:Depends},
-Description: pq-gsettings
- PQ wrapper gsettings gschema
+Description: pq gsettings schema (this is a transitional package)
