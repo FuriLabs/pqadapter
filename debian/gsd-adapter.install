@@ -1,3 +1,2 @@
 usr/libexec/gsd-adapter
 usr/lib/systemd/user/gsd-adapter.service
-usr/share/polkit-1/rules.d/50-org.freedesktop.systemd1.manage-units.rules

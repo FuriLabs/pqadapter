@@ -52,9 +52,6 @@ install: all
 	install -d $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/
 	install -m 0644 io.furios.pq.gschema.xml $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/io.furios.pq.gschema.xml
 
-	install -d $(DESTDIR)$(PREFIX)/share/polkit-1/rules.d/
-	install -m 0644 50-org.freedesktop.systemd1.manage-units.rules $(DESTDIR)$(PREFIX)/share/polkit-1/rules.d/50-org.freedesktop.systemd1.manage-units.rules
-
 compile-schemas:
 	glib-compile-schemas $(DESTDIR)$(PREFIX)/share/glib-2.0/schemas/
 
