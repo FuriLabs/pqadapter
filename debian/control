@@ -37,6 +37,7 @@ Package: gsd-adapter
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends},
           libpq (= ${binary:Version}),
+          furios-quirks-polkit,
 Description: gsd-adapter
  A service to handle device specific gsd functions
 
