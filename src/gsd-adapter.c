@@ -179,6 +179,82 @@ on_privacy_setting_changed(GSettings *settings,
     }
 }
 
+static GDBusConnection *
+get_system_bus(GError **error)
+{
+    GDBusConnection *connection;
+
+    connection = g_bus_get_sync(G_BUS_TYPE_SYSTEM, NULL, error);
+    if (!connection) {
+        g_prefix_error(error, "Failed connecting to D-Bus system bus: ");
+        return NULL;
+    }
+
+    return connection;
+}
+
+static gboolean
+start_systemd_service(const gchar *service_name, GError **error)
+{
+    g_autoptr(GDBusConnection) connection = NULL;
+    g_autoptr(GVariant) start_result = NULL;
+
+    connection = get_system_bus(error);
+    if (!connection)
+        return FALSE;
+
+    start_result = g_dbus_connection_call_sync(connection,
+                                               "org.freedesktop.systemd1",
+                                               "/org/freedesktop/systemd1",
+                                               "org.freedesktop.systemd1.Manager",
+                                               "RestartUnit",
+                                               g_variant_new("(ss)",
+                                                             service_name,
+                                                             "replace"),
+                                               G_VARIANT_TYPE("(o)"),
+                                               G_DBUS_CALL_FLAGS_NONE,
+                                               -1,
+                                               NULL,
+                                               error);
+    if (!start_result) {
+        g_prefix_error(error, "Failed to restart %s service: ", service_name);
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+static gboolean
+stop_systemd_service(const gchar *service_name, GError **error)
+{
+    g_autoptr(GDBusConnection) connection = NULL;
+    g_autoptr(GVariant) stop_result = NULL;
+
+    connection = get_system_bus(error);
+    if (!connection)
+        return FALSE;
+
+    stop_result = g_dbus_connection_call_sync(connection,
+                                              "org.freedesktop.systemd1",
+                                              "/org/freedesktop/systemd1",
+                                              "org.freedesktop.systemd1.Manager",
+                                              "StopUnit",
+                                              g_variant_new("(ss)",
+                                                            service_name,
+                                                            "replace"),
+                                              G_VARIANT_TYPE("(o)"),
+                                              G_DBUS_CALL_FLAGS_NONE,
+                                              -1,
+                                              NULL,
+                                              error);
+    if (!stop_result) {
+        g_prefix_error(error, "Failed to stop %s service: ", service_name);
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
 static void
 on_location_setting_changed(GSettings *settings,
                             gchar *key,
@@ -189,19 +265,29 @@ on_location_setting_changed(GSettings *settings,
     g_print("Location setting '%s' changed to: %s\n", key, setting_value ? "true" : "false");
 
     char service_state[PROP_VALUE_MAX];
+    GError *error = NULL;
+
     if (setting_value) {
         if (property_get("init.svc.vendor.gnss-default", service_state, "running") &&
             strcmp(service_state, "stopped") == 0) {
             property_set("ctl.start", "vendor.gnss-default");
             g_print("GNSS service started.\n");
-            system("systemctl restart geoclue");
+
+            if (!start_systemd_service("geoclue.service", &error)) {
+                g_warning("Failed to restart geoclue service: %s", error->message);
+                g_clear_error(&error);
+            }
         }
     } else {
         if (property_get("init.svc.vendor.gnss-default", service_state, "stopped") &&
             strcmp(service_state, "running") == 0) {
             property_set("ctl.stop", "vendor.gnss-default");
             g_print("GNSS service stopped.\n");
-            system("systemctl stop geoclue");
+
+            if (!stop_systemd_service("geoclue.service", &error)) {
+                g_warning("Failed to stop geoclue service: %s", error->message);
+                g_clear_error(&error);
+            }
         }
     }
 }
