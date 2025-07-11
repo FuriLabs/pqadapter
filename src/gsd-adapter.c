@@ -91,7 +91,7 @@ on_night_light_enabled(GSettings *settings,
 {
     AppSettings *app_settings = (AppSettings*)data;
     gboolean night_light_enabled = g_settings_get_boolean(settings, key);
-    g_print("Current Night Light setting: %s\n", night_light_enabled ? "enabled" : "disabled");
+    g_debug("Current Night Light setting: %s", night_light_enabled ? "enabled" : "disabled");
 
     if (night_light_enabled)
         enable_blue_light_hidl(app_settings->pq_ctx->client, 1, 5 /* step */, app_settings->settings_pq);
@@ -119,7 +119,7 @@ on_night_light_temperature_changed(GSettings *settings,
                                   app_settings->scale_min;
         scaled_temperature = scaled_temperature * 0.3;
 
-        g_print("Night Light temperature mapped: %.0f \n", scaled_temperature);
+        g_debug("Night Light temperature mapped: %.0f", scaled_temperature);
         set_blue_light_strength_hidl(app_settings->pq_ctx->client,
                                      (int)scaled_temperature,
                                      5 /* step */,
@@ -142,7 +142,7 @@ clear_directory(const char *path)
         }
         closedir(dir);
         rmdir(path);
-        g_print("GStreamer cache cleared.\n");
+        g_debug("GStreamer cache cleared.");
     }
 }
 
@@ -153,7 +153,7 @@ on_privacy_setting_changed(GSettings *settings,
 {
     AppSettings *app_settings = (AppSettings*)data;
     gboolean setting_value = g_settings_get_boolean(settings, key);
-    g_print("Privacy setting '%s' changed to: %s\n", key, setting_value ? "true" : "false");
+    g_debug("Privacy setting '%s' changed to: %s", key, setting_value ? "true" : "false");
 
     if (g_strcmp0(key, "disable-microphone") == 0) {
         set_capture_state("default", "Capture", setting_value ? 0 : 1);
@@ -163,13 +163,13 @@ on_privacy_setting_changed(GSettings *settings,
             if (property_get("init.svc.camerahalserver", service_state, "stopped") &&
                 strcmp(service_state, "running") == 0) {
                 property_set("ctl.stop", "camerahalserver");
-                g_print("Camera HAL server stopped.\n");
+                g_debug("Camera HAL server stopped.");
             }
         } else {
             if (property_get("init.svc.camerahalserver", service_state, "running") &&
                 strcmp(service_state, "stopped") == 0) {
                 property_set("ctl.start", "camerahalserver");
-                g_print("Camera HAL server started.\n");
+                g_debug("Camera HAL server started.");
 
                 char cache_dir[512];
                 snprintf(cache_dir, sizeof(cache_dir), "%s/.cache/gstreamer-1.0", getenv("HOME"));
@@ -262,7 +262,7 @@ on_location_setting_changed(GSettings *settings,
 {
     AppSettings *app_settings = (AppSettings*)data;
     gboolean setting_value = g_settings_get_boolean(settings, key);
-    g_print("Location setting '%s' changed to: %s\n", key, setting_value ? "true" : "false");
+    g_debug("Location setting '%s' changed to: %s", key, setting_value ? "true" : "false");
 
     char service_state[PROP_VALUE_MAX];
     GError *error = NULL;
@@ -271,7 +271,7 @@ on_location_setting_changed(GSettings *settings,
         if (property_get("init.svc.vendor.gnss-default", service_state, "running") &&
             strcmp(service_state, "stopped") == 0) {
             property_set("ctl.start", "vendor.gnss-default");
-            g_print("GNSS service started.\n");
+            g_debug("GNSS service started.");
 
             if (!start_systemd_service("geoclue.service", &error)) {
                 g_warning("Failed to restart geoclue service: %s", error->message);
@@ -282,7 +282,7 @@ on_location_setting_changed(GSettings *settings,
         if (property_get("init.svc.vendor.gnss-default", service_state, "stopped") &&
             strcmp(service_state, "running") == 0) {
             property_set("ctl.stop", "vendor.gnss-default");
-            g_print("GNSS service stopped.\n");
+            g_debug("GNSS service stopped.");
 
             if (!stop_systemd_service("geoclue.service", &error)) {
                 g_warning("Failed to stop geoclue service: %s", error->message);
@@ -302,7 +302,7 @@ pq_gsettings_init(AppSettings *app_settings)
 
     for (int i = 0; i < 20; i++) {
         int mode = g_settings_get_int(app_settings->settings_pq, app_settings->pq_keys[i]);
-        g_print("Setting %s to %d\n", app_settings->pq_keys[i], mode);
+        g_debug("Setting %s to %d", app_settings->pq_keys[i], mode);
 
         switch (i + 1) {
             case 1:
@@ -411,10 +411,9 @@ main(int argc, char **argv)
                          G_CALLBACK(on_privacy_setting_changed), app_settings);
     }
 
-    if (app_settings->settings_location) {
+    if (app_settings->settings_location)
         g_signal_connect(app_settings->settings_location, "changed::enabled",
                          G_CALLBACK(on_location_setting_changed), app_settings);
-    }
 
     app_settings->main_loop = g_main_loop_new(NULL, FALSE);
     if (app_settings->main_loop)
