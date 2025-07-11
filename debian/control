@@ -15,6 +15,7 @@ Vcs-Git: https://github.com/furilabs/pqadapter.git
 
 Package: libpq
 Architecture: any
+Conflicts: pq-gsettings
 Depends: ${misc:Depends}, ${shlibs:Depends},
 Description: libpq
  PQ wrapper shared object
