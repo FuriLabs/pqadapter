@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Bardia Moshiri
+ * Copyright (C) 2025 Bardia Moshiri
  * SPDX-License-Identifier: GPL-3.0+
  * Author: Bardia Moshiri <fakeshell@bardia.tech>
  */
