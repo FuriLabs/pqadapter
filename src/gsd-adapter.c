@@ -37,17 +37,44 @@ init_app_settings()
     if (!settings)
         return NULL;
 
+    settings->settings_color = NULL;
+    settings->settings_privacy = NULL;
+    settings->settings_location = NULL;
+    settings->settings_pq = NULL;
+    settings->main_loop = NULL;
+    settings->pq_ctx = NULL;
+
     settings->pq_ctx = init_pq_hidl();
     if (!settings->pq_ctx) {
         free(settings);
         return NULL;
     }
 
-    settings->settings_color = g_settings_new("org.gnome.settings-daemon.plugins.color");
-    settings->settings_privacy = g_settings_new("org.gnome.desktop.privacy");
-    settings->settings_location = g_settings_new("org.gnome.system.location");
-    settings->settings_pq = g_settings_new("io.furios.pq");
-    settings->main_loop = NULL;
+    GSettingsSchemaSource *schema_source = g_settings_schema_source_get_default();
+
+    GSettingsSchema *color_schema = g_settings_schema_source_lookup(schema_source, "org.gnome.settings-daemon.plugins.color", TRUE);
+    if (color_schema) {
+        settings->settings_color = g_settings_new("org.gnome.settings-daemon.plugins.color");
+        g_settings_schema_unref(color_schema);
+    }
+
+    GSettingsSchema *privacy_schema = g_settings_schema_source_lookup(schema_source, "org.gnome.desktop.privacy", TRUE);
+    if (privacy_schema) {
+        settings->settings_privacy = g_settings_new("org.gnome.desktop.privacy");
+        g_settings_schema_unref(privacy_schema);
+    }
+
+    GSettingsSchema *location_schema = g_settings_schema_source_lookup(schema_source, "org.gnome.system.location", TRUE);
+    if (location_schema) {
+        settings->settings_location = g_settings_new("org.gnome.system.location");
+        g_settings_schema_unref(location_schema);
+    }
+
+    GSettingsSchema *pq_schema = g_settings_schema_source_lookup(schema_source, "io.furios.pq", TRUE);
+    if (pq_schema) {
+        settings->settings_pq = g_settings_new("io.furios.pq");
+        g_settings_schema_unref(pq_schema);
+    }
 
     settings->original_min_temperature = 1700;
     settings->original_max_temperature = 4700;
@@ -372,6 +399,9 @@ pq_gsettings_init(AppSettings *app_settings)
 static void
 cleanup_app_settings(AppSettings *settings)
 {
+    if (!settings)
+        return;
+
     if (settings->settings_color)
         g_object_unref(settings->settings_color);
     if (settings->settings_privacy)
@@ -382,6 +412,9 @@ cleanup_app_settings(AppSettings *settings)
         g_object_unref(settings->settings_pq);
     if (settings->main_loop)
         g_main_loop_unref(settings->main_loop);
+    if (settings->pq_ctx)
+        cleanup_pq_hidl(settings->pq_ctx);
+
     free(settings);
 }
 
@@ -389,6 +422,10 @@ int
 main(int argc, char **argv)
 {
     AppSettings *app_settings = init_app_settings();
+    if (!app_settings) {
+        g_printerr("Failed to initialize application settings\n");
+        return 1;
+    }
 
     pq_gsettings_init(app_settings);
 
