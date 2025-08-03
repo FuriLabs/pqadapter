@@ -104,7 +104,13 @@ init_service_context(void)
 
     GSettingsSchemaSource *schema_source = g_settings_schema_source_get_default();
     GSettingsSchema *schema = g_settings_schema_source_lookup(schema_source, "io.furios.pq", TRUE);
-    ctx->settings = schema ? g_settings_new("io.furios.pq") : NULL;
+
+    if (schema) {
+        ctx->settings = g_settings_new("io.furios.pq");
+        g_settings_schema_unref(schema);
+    } else {
+        ctx->settings = NULL;
+    }
 
     if (!ctx->settings) {
         cleanup_service_context(ctx);
