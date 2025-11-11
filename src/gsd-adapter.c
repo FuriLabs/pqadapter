@@ -185,24 +185,25 @@ on_privacy_setting_changed(GSettings *settings,
     if (g_strcmp0(key, "disable-microphone") == 0) {
         set_capture_state("default", "Capture", setting_value ? 0 : 1);
     } else if (g_strcmp0(key, "disable-camera") == 0) {
-        char service_state[PROP_VALUE_MAX];
-        if (setting_value) {
-            if (property_get("init.svc.camerahalserver", service_state, "stopped") &&
-                strcmp(service_state, "running") == 0) {
-                property_set("ctl.stop", "camerahalserver");
-                g_debug("Camera HAL server stopped.");
-            }
-        } else {
-            if (property_get("init.svc.camerahalserver", service_state, "running") &&
-                strcmp(service_state, "stopped") == 0) {
-                property_set("ctl.start", "camerahalserver");
-                g_debug("Camera HAL server started.");
+        const char *prop_value = setting_value ? "1" : "0";
+        int res = property_set("furios.disable.camera", prop_value);
 
+        if (res != 0) {
+            g_warning("Failed to set furios.disable.camera=%s (ret=%d)", prop_value, res);
+            return;
+        }
+
+        if (!setting_value) {
+            const char *home = g_getenv("HOME");
+            if (home && *home) {
                 char cache_dir[512];
-                snprintf(cache_dir, sizeof(cache_dir), "%s/.cache/gstreamer-1.0", getenv("HOME"));
+                g_snprintf(cache_dir, sizeof(cache_dir),
+                           "%s/.cache/gstreamer-1.0", home);
                 clear_directory(cache_dir);
             }
         }
+
+        g_debug("Camera privacy: furios.disable.camera=%s", prop_value);
     }
 }
 
