@@ -14,6 +14,10 @@
 #include <unistd.h>
 #include <hybris/properties/properties.h>
 
+#define SCREENSAVER_BUS_NAME     "org.gnome.ScreenSaver"
+#define SCREENSAVER_OBJECT_PATH  "/org/gnome/ScreenSaver"
+#define SCREENSAVER_INTERFACE    "org.gnome.ScreenSaver"
+
 typedef struct {
     GSettings *settings_color;
     GSettings *settings_privacy;
@@ -21,6 +25,13 @@ typedef struct {
     GSettings *settings_pq;
     GMainLoop *main_loop;
     PQContext *pq_ctx;
+
+    GDBusConnection *session_bus;
+    guint screensaver_watch_id;
+    guint screensaver_signal_id;
+    gboolean screen_off;
+    gboolean pq_restore_pending;
+    gboolean night_light_pending;
 
     guint32 original_min_temperature;
     guint32 original_max_temperature;
@@ -43,6 +54,13 @@ init_app_settings()
     settings->settings_pq = NULL;
     settings->main_loop = NULL;
     settings->pq_ctx = NULL;
+
+    settings->session_bus = NULL;
+    settings->screensaver_watch_id = 0;
+    settings->screensaver_signal_id = 0;
+    settings->screen_off = FALSE;
+    settings->pq_restore_pending = FALSE;
+    settings->night_light_pending = FALSE;
 
     settings->pq_ctx = init_pq_hidl();
     if (!settings->pq_ctx) {
@@ -120,6 +138,14 @@ on_night_light_enabled(GSettings *settings,
     gboolean night_light_enabled = g_settings_get_boolean(settings, key);
     g_debug("Current Night Light setting: %s", night_light_enabled ? "enabled" : "disabled");
 
+    /* A PQ call while the panel is off leaves the PQ HAL unresponsive until
+       its service restarts. */
+    if (app_settings->screen_off) {
+        g_debug("Screen is off, deferring Night Light change");
+        app_settings->night_light_pending = TRUE;
+        return;
+    }
+
     if (night_light_enabled)
         enable_blue_light_hidl(app_settings->pq_ctx->client, 1, 5 /* step */, app_settings->settings_pq);
     else
@@ -135,6 +161,12 @@ on_night_light_temperature_changed(GSettings *settings,
     gboolean night_light_enabled = g_settings_get_boolean(settings, "night-light-enabled");
 
     if (night_light_enabled) {
+        if (app_settings->screen_off) {
+            g_debug("Screen is off, deferring Night Light temperature change");
+            app_settings->night_light_pending = TRUE;
+            return;
+        }
+
         guint32 temperature = g_settings_get_uint(settings, key);
 
         guint32 reversed_temperature = app_settings->original_max_temperature -
@@ -398,6 +430,152 @@ pq_gsettings_init(AppSettings *app_settings)
 }
 
 static void
+apply_deferred(AppSettings *app_settings)
+{
+    if (app_settings->pq_restore_pending) {
+        app_settings->pq_restore_pending = FALSE;
+        g_debug("Applying deferred PQ restore");
+        pq_gsettings_init(app_settings);
+    }
+
+    if (app_settings->night_light_pending && app_settings->settings_color) {
+        app_settings->night_light_pending = FALSE;
+        g_debug("Applying deferred Night Light change");
+        on_night_light_enabled(app_settings->settings_color, "night-light-enabled", app_settings);
+        on_night_light_temperature_changed(app_settings->settings_color, "night-light-temperature", app_settings);
+    }
+}
+
+static void
+set_screen_off(AppSettings *app_settings, gboolean screen_off)
+{
+    if (app_settings->screen_off == screen_off)
+        return;
+
+    app_settings->screen_off = screen_off;
+    g_debug("Screen is now %s", screen_off ? "off" : "on");
+
+    if (!screen_off)
+        apply_deferred(app_settings);
+}
+
+static void
+on_screensaver_active_changed(GDBusConnection *connection,
+                              const gchar *sender_name,
+                              const gchar *object_path,
+                              const gchar *interface_name,
+                              const gchar *signal_name,
+                              GVariant *parameters,
+                              gpointer data)
+{
+    gboolean active;
+
+    if (!g_variant_is_of_type(parameters, G_VARIANT_TYPE("(b)")))
+        return;
+
+    g_variant_get(parameters, "(b)", &active);
+    set_screen_off((AppSettings*)data, active);
+}
+
+static void
+on_screensaver_get_active_ready(GObject *source,
+                                GAsyncResult *res,
+                                gpointer data)
+{
+    g_autoptr(GError) error = NULL;
+    g_autoptr(GVariant) result = NULL;
+    gboolean active;
+
+    result = g_dbus_connection_call_finish(G_DBUS_CONNECTION(source), res, &error);
+    if (!result) {
+        g_debug("Failed to get screen saver state: %s", error->message);
+        return;
+    }
+
+    g_variant_get(result, "(b)", &active);
+    set_screen_off((AppSettings*)data, active);
+}
+
+static void
+on_screensaver_appeared(GDBusConnection *connection,
+                        const gchar *name,
+                        const gchar *name_owner,
+                        gpointer data)
+{
+    g_dbus_connection_call(connection,
+                           name_owner,
+                           SCREENSAVER_OBJECT_PATH,
+                           SCREENSAVER_INTERFACE,
+                           "GetActive",
+                           NULL,
+                           G_VARIANT_TYPE("(b)"),
+                           G_DBUS_CALL_FLAGS_NONE,
+                           -1,
+                           NULL,
+                           on_screensaver_get_active_ready,
+                           data);
+}
+
+static void
+on_screensaver_vanished(GDBusConnection *connection,
+                        const gchar *name,
+                        gpointer data)
+{
+    set_screen_off((AppSettings*)data, FALSE);
+}
+
+static void
+watch_screen_state(AppSettings *app_settings)
+{
+    g_autoptr(GError) error = NULL;
+    g_autoptr(GVariant) result = NULL;
+
+    app_settings->session_bus = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
+    if (!app_settings->session_bus) {
+        g_warning("Failed to connect to session bus, Night Light changes won't wait for the screen: %s",
+                  error->message);
+        return;
+    }
+
+    app_settings->screensaver_signal_id =
+        g_dbus_connection_signal_subscribe(app_settings->session_bus,
+                                           SCREENSAVER_BUS_NAME,
+                                           SCREENSAVER_INTERFACE,
+                                           "ActiveChanged",
+                                           SCREENSAVER_OBJECT_PATH,
+                                           NULL,
+                                           G_DBUS_SIGNAL_FLAGS_NONE,
+                                           on_screensaver_active_changed,
+                                           app_settings,
+                                           NULL);
+
+    result = g_dbus_connection_call_sync(app_settings->session_bus,
+                                         SCREENSAVER_BUS_NAME,
+                                         SCREENSAVER_OBJECT_PATH,
+                                         SCREENSAVER_INTERFACE,
+                                         "GetActive",
+                                         NULL,
+                                         G_VARIANT_TYPE("(b)"),
+                                         G_DBUS_CALL_FLAGS_NO_AUTO_START,
+                                         1000,
+                                         NULL,
+                                         &error);
+    if (result)
+        g_variant_get(result, "(b)", &app_settings->screen_off);
+    else
+        g_debug("Screen saver state unavailable, assuming screen is on: %s", error->message);
+
+    app_settings->screensaver_watch_id =
+        g_bus_watch_name_on_connection(app_settings->session_bus,
+                                       SCREENSAVER_BUS_NAME,
+                                       G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                       on_screensaver_appeared,
+                                       on_screensaver_vanished,
+                                       app_settings,
+                                       NULL);
+}
+
+static void
 cleanup_app_settings(AppSettings *settings)
 {
     if (!settings)
@@ -413,6 +591,12 @@ cleanup_app_settings(AppSettings *settings)
         g_object_unref(settings->settings_pq);
     if (settings->main_loop)
         g_main_loop_unref(settings->main_loop);
+    if (settings->screensaver_watch_id)
+        g_bus_unwatch_name(settings->screensaver_watch_id);
+    if (settings->screensaver_signal_id)
+        g_dbus_connection_signal_unsubscribe(settings->session_bus, settings->screensaver_signal_id);
+    if (settings->session_bus)
+        g_object_unref(settings->session_bus);
     if (settings->pq_ctx)
         cleanup_pq_hidl(settings->pq_ctx);
 
@@ -428,7 +612,14 @@ main(int argc, char **argv)
         return 1;
     }
 
-    pq_gsettings_init(app_settings);
+    watch_screen_state(app_settings);
+
+    if (app_settings->screen_off) {
+        g_debug("Screen is off, deferring PQ restore");
+        app_settings->pq_restore_pending = TRUE;
+    } else {
+        pq_gsettings_init(app_settings);
+    }
 
     if (app_settings->settings_color) {
         on_night_light_enabled(app_settings->settings_color, "night-light-enabled", app_settings);
